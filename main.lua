@@ -155,6 +155,80 @@ SMODS.Joker{
     end,
 }
 
+--Otterly tyop--
+SMODS.Joker{
+    key = 'OtterlyTyop', --How the code refers to the joker
+    loc_txt = { -- local text
+        name = 'Otterly Tyop',
+        text = {
+          '{C:green}1 in 2{} chnace orf',
+          '{C:mult}10x Mult{} ot be addded to {C:chips}Chips{}',
+          '{C:green}1 in 4{} chcnae fro ',
+          '{C:attention}10%{} of {C:chips}Chips{} to eb aded ot {C:mult}Mult{}.'
+        },
+    },
+    atlas = 'Jokers', --atlas' key
+    rarity = 3, --rarity: 1 = Common, 2 = Uncommon, 3 = Rare, 4 = Legendary
+    cost = 11, --cost
+    unlocked = true, --where it is unlocked or not: if true, 
+    discovered = true, --whether or not it starts discovered
+    blueprint_compat = false, --can it be blueprinted/brainstormed/other
+    eternal_compat = true, --can it be eternal
+    perishable_compat = true, --can it be perishable
+    pos = {x = 2, y = 0}, --position in joker spritesheet, starts at 0, scales by the atlas' card size (px and py): {x = 1, y = 0} would mean the sprite is 71 pixels to the right
+    config = { 
+      extra = {
+        oddsMultToChip = 2, --1 in 2, so save the "in x"
+        oddsChipToMult = 4 --1 in 4
+      }
+    },
+    --local variables unique to this joker
+    --Recalculated when description shown
+    loc_vars = function(self,info_queue,center) --center refers to the "config" variable 
+        displayedMult = 0
+        if pcall(getNumOfTwos) then
+            displayedMult = getNumOfTwos()  
+        end
+        center.ability.extra.mult = displayedMult
+        return {vars = {center.ability.extra.mult, center.ability.extra.multGain}} --returns an array of variables to the description
+    end,
+    --Calculate function performed during score calculatio. This is where the effects should be triggered!
+    calculate = function(self, card, context)
+            odds = pseudorandom(pseudoseed('OtterlyTyop'))
+            if context.joker_main then
+                if odds < G.GAME.probabilities.normal/card.ability.extra.oddsMultToChip then
+                    hand_chips = hand_chips + (mult*10)
+                    update_hand_text({ delay = 0 }, { mult = mult, chips = hand_chips })
+                    SMODS.juice_up_blind()
+                    return {
+                        message = "typo!"
+                    }
+                end
+
+                if odds < G.GAME.probabilities.normal/card.ability.extra.oddsChipToMult then
+                    mult = mult+(hand_chips/10)
+                    hand_chips = hand_chips - (hand_chips/10)
+                    update_hand_text({ delay = 0 }, { mult = mult, chips = hand_chips })
+                    SMODS.juice_up_blind()
+                    return {
+                        message = "tyop!"
+                    }
+                end
+            end
+
+            if context.final_scoring_step and context.cardarea == G.play then
+                --pseudorandom returns a value between 0 and 1
+                --Game probability.normal is just the variable "normal" in the "Game" init function. Use it if you want it to be affected by probability modifiers
+                --normal is always just 1, so you can just divide it by how unlikely you want. So "1 in 4 chance" is just G.GAME.probabilities.normal/4!
+                --You can just send the pseudorandom with the seed being the name of the joker. If pseudorandom returns less than, it matches the odds (so random < 1/4 will only return true one in 4 times)
+            end
+
+		end,
+    in_pool = function(self,wawa,wawa2)
+        --whether or not this card is in the pool, return true if it is, return false if its not
+        return true
+    end,
+}
 
 --Generic functions not tied to any specific card--
 
