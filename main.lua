@@ -21,7 +21,7 @@ SMODS.Joker{
         name = 'Rai twoah',
         text = {
           'Gains {C:mult}+#2#{} Mult for',
-          'each 2 in your full deck', --#<number># refers to the arary index (starting from 1!!) of the returned vars from loc_vars function
+          'each {C:attention}2{} in your full deck', --#<number># refers to the arary index (starting from 1!!) of the returned vars from loc_vars function
           '{C:gray}Currently{} {C:mult}+#1#{} {C:gray}Mult{}'
         },
     },
@@ -45,7 +45,7 @@ SMODS.Joker{
     loc_vars = function(self,info_queue,center) --center refers to the "config" variable 
         displayedMult = 0
         if pcall(getNumOfTwos) then
-            displayedMult = getNumOfTwos()  
+            displayedMult = getNumOfTwos()*2  
         end
         center.ability.extra.mult = displayedMult
         return {vars = {center.ability.extra.mult, center.ability.extra.multGain}} --returns an array of variables to the description
@@ -55,7 +55,7 @@ SMODS.Joker{
         if context.joker_main then
 
             if pcall(getNumOfTwos) then
-                card.ability.extra.mult = getNumOfTwos()  
+                card.ability.extra.mult = getNumOfTwos()*2
             end
             return { 
                 mult = card.ability.extra.mult
@@ -63,12 +63,11 @@ SMODS.Joker{
         end
 
         if context.playing_card_added then
-            
             --Looks like every variable mentioned in the docs is actually in the context variable!
             --So when the docs mention "cards" make sure to instead use context.cards
             tally = 0
             for k, v in pairs(context.cards) do
-                if v:get_id() == 2 then tally = tally+1 end
+                if type(v) ~= "boolean" and v:get_id() == 2 then tally = tally+1 end
             end
 
             if tally > 0 then
@@ -91,9 +90,9 @@ SMODS.Joker{
     loc_txt = { -- local text
         name = 'Vorca',
         text = {
-          'Eats the final scored card',
-          'to gain {C:chips}Chips{} equal to its original value', --#<number># refers to the arary index (starting from 1!!) of the returned vars from loc_vars function
-          '{C:gray}Currently{} {C:chips}+#1#{} {C:chips}chips{}'
+          'Eats the final scored card to gain {C:chips}Chips{}',
+          ' equal to double its original value', --#<number># refers to the arary index (starting from 1!!) of the returned vars from loc_vars function
+          '{C:inactive}(Currently{} {C:chips}+#1#{} {C:chips}chips){}'
         },
     },
     atlas = 'Jokers', --atlas' key
@@ -139,7 +138,7 @@ SMODS.Joker{
             card.ability.extra.currentCardIndex = card.ability.extra.currentCardIndex+1
 
             if card.ability.extra.currentCardIndex > card.ability.extra.cardIndexToDestroy then
-                card.ability.extra.chips = card.ability.extra.chips+context.scoring_hand[card.ability.extra.currentCardIndex-1]:get_chip_bonus()
+                card.ability.extra.chips = card.ability.extra.chips+(context.scoring_hand[card.ability.extra.currentCardIndex-1]:get_chip_bonus()*2)
                 return { 
                     message = "NOM", --# symbol is a quick way to get size of array
                     remove = true
@@ -154,6 +153,7 @@ SMODS.Joker{
         return true
     end,
 }
+
 
 --Otterly tyop--
 SMODS.Joker{
@@ -224,6 +224,145 @@ SMODS.Joker{
             end
 
 		end,
+    in_pool = function(self,wawa,wawa2)
+        --whether or not this card is in the pool, return true if it is, return false if its not
+        return true
+    end,
+}
+
+--Will--
+SMODS.Joker{
+    key = 'Muhlbach', --How the code refers to the joker
+    loc_txt = { -- local text
+        name = 'Muhlbach Joker',
+        text = {
+         'Gives a bonus {C:chips}502 Chips{}',
+         'For each scored {C:attention}4{}, {C:attention}Ace{}, and {C:attention}8{}', --#<number># refers to the arary index (starting from 1!!) of the returned vars from loc_vars function
+        },
+    },
+    atlas = 'Jokers', --atlas' key
+    rarity = 1, --rarity: 1 = Common, 2 = Uncommon, 3 = Rare, 4 = Legendary
+    cost = 4, --cost
+    unlocked = true, --where it is unlocked or not: if true, 
+    discovered = true, --whether or not it starts discovered
+    blueprint_compat = true, --can it be blueprinted/brainstormed/other (should only copy the mult NOT the card destruction!)
+    eternal_compat = true, --can it be eternal
+    perishable_compat = true, --can it be perishable
+    pos = {x = 3, y = 0}, --position in joker spritesheet, starts at 0, scales by the atlas' card size (px and py): {x = 1, y = 0} would mean the sprite is 71 pixels to the right
+    config = { 
+      extra = {
+        give_bonus_chips = 0
+      }
+    },
+    --local variables unique to this joker
+    --Recalculated when description shown
+    loc_vars = function(self,info_queue,center) --center refers to the "config" variable 
+        return {vars = {center.ability.extra.chips}} --returns an array of variables to the description
+    end,
+    --Calculate function performed during score calculatio. This is where the effects should be triggered!
+    calculate = function(self,card,context)
+
+        if context.joker_main then 
+            if card.ability.extra.give_bonus_chips == 1 then
+                card.ability.extra.give_bonus_chips = 0
+				return {
+                    message = 'Scada Bonus!',
+                    colour = { 0, 0, 1, 1 },
+				}
+			end
+        end
+
+        if context.individual and context.cardarea == G.play then 
+            if context.other_card:get_id() == 4 or context.other_card:get_id() == 14 or context.other_card:get_id() == 8 then
+                card.ability.extra.give_bonus_chips = 1
+                return
+                {
+                    chips = 502
+                }
+			end
+        end
+
+    end,
+    in_pool = function(self,wawa,wawa2)
+        --whether or not this card is in the pool, return true if it is, return false if its not
+        return true
+    end,
+}
+
+--Raibuprofen--
+SMODS.Joker{
+    key = 'Raibuprofen', --How the code refers to the joker
+    loc_txt = { -- local text
+        name = 'Raibuprofen',
+        text = {
+          '{C:chips}+#1# Chips{}',
+          '{C:chips}-50 Chips{} for the', --#<number># refers to the arary index (starting from 1!!) of the returned vars from loc_vars function
+          'first discard of the round'
+        },
+    },
+    atlas = 'Jokers', --atlas' key
+    rarity = 1, --rarity: 1 = Common, 2 = Uncommon, 3 = Rare, 4 = Legendary
+    cost = 4, --cost
+    unlocked = true, --where it is unlocked or not: if true, 
+    discovered = true, --whether or not it starts discovered
+    blueprint_compat = true, --can it be blueprinted/brainstormed/other (should only copy the mult NOT the card destruction!)
+    eternal_compat = true, --can it be eternal
+    perishable_compat = true, --can it be perishable
+    pos = {x = 4, y = 0}, --position in joker spritesheet, starts at 0, scales by the atlas' card size (px and py): {x = 1, y = 0} would mean the sprite is 71 pixels to the right
+    config = { 
+      extra = {
+        chips = 200, --How many chips left
+        is_first_discard = 1, --Is this the first discord (1=yes, 0=no)
+      }
+    },
+    --local variables unique to this joker
+    --Recalculated when description shown
+    loc_vars = function(self,info_queue,center) --center refers to the "config" variable 
+        return {vars = {center.ability.extra.chips}} --returns an array of variables to the description
+    end,
+    --Calculate function performed during score calculatio. This is where the effects should be triggered!
+    calculate = function(self,card,context)
+
+        if context.joker_main then
+            return { 
+                chips = card.ability.extra.chips
+            }
+        end
+
+        if context.end_of_round and context.cardarea == G.jokers then
+            card.ability.extra.is_first_discard = 1
+            if card.ability.extra.is_first_discard == 0 then
+                return
+                {
+                    message = 'Reset!'
+                }
+            end
+        end
+
+        if context.pre_discard then
+            if card.ability.extra.is_first_discard == 1 then
+                card.ability.extra.is_first_discard = 0
+                card.ability.extra.chips = card.ability.extra.chips - 50
+                if card.ability.extra.chips <= 0 then 
+                    play_sound('tarot1')
+                    card.T.r = -0.2
+                    card.states.drag.is = true
+                    card.children.center.pinch.x = true
+                    G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.3, blockable = false,
+                        func = function()
+                                G.jokers:remove_card(self)
+                                card:remove()
+                                card = nil
+                            return true; end})) 
+                end
+                return {
+                    message = '-50',
+                    pre_discard = true,
+                }
+            end
+        end
+
+    end,
     in_pool = function(self,wawa,wawa2)
         --whether or not this card is in the pool, return true if it is, return false if its not
         return true
