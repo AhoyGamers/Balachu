@@ -232,12 +232,11 @@ SMODS.Joker{
 
 --Will--
 SMODS.Joker{
-    key = 'Muhlbach', --How the code refers to the joker
+    key = 'GetThoseEarsOut', --How the code refers to the joker
     loc_txt = { -- local text
-        name = 'Muhlbach Joker',
+        name = 'Get Those Big Ol\' ears out of my Joker!',
         text = {
-         'Gives a bonus {C:chips}502 Chips{}',
-         'For each scored {C:attention}4{}, {C:attention}Ace{}, and {C:attention}8{}', --#<number># refers to the arary index (starting from 1!!) of the returned vars from loc_vars function
+         'Idk maple is cool', --#<number># refers to the arary index (starting from 1!!) of the returned vars from loc_vars function
         },
     },
     atlas = 'Jokers', --atlas' key
