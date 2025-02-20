@@ -380,7 +380,7 @@ SMODS.Joker{
 SMODS.Joker{
     key = 'Pantsfeet', --How the code refers to the joker
     loc_txt = { -- local text
-        name = 'Pants Feet Joker',
+        name = 'Pants Feet',
         text = {
           'This Joker gains {X:mult,C:white} X1.0 {} Mult',
           'per scored card in hand'
