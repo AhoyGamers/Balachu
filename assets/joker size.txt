@@ -1,0 +1,3 @@
+every joker square is 142 x 190
+
+1x is achieved by just halving size of 2x

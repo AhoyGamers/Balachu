@@ -230,7 +230,7 @@ SMODS.Joker{
     end,
 }
 
---Maple Get those bil ol ears out of my joker--
+--Maple Get those big ol ears out of my joker--
 SMODS.Joker{
     key = 'GetThoseEarsOut', --How the code refers to the joker
     loc_txt = { -- local text
@@ -367,6 +367,48 @@ SMODS.Joker{
                     pre_discard = true,
                 }
             end
+        end
+
+    end,
+    in_pool = function(self,wawa,wawa2)
+        --whether or not this card is in the pool, return true if it is, return false if its not
+        return true
+    end,
+}
+
+--Pants feet--
+SMODS.Joker{
+    key = 'Pantsfeet', --How the code refers to the joker
+    loc_txt = { -- local text
+        name = 'Pants Feet Joker',
+        text = {
+          'This Joker gains {X:mult,C:white} X1.0 {} Mult',
+          'per scored card in hand'
+        },
+    },
+    atlas = 'Jokers', --atlas' key
+    rarity = 3, --rarity: 1 = Common, 2 = Uncommon, 3 = Rare, 4 = Legendary
+    cost = 8, --cost
+    unlocked = true, --where it is unlocked or not: if true, 
+    discovered = true, --whether or not it starts discovered
+    blueprint_compat = true, --can it be blueprinted/brainstormed/other (should only copy the mult NOT the card destruction!)
+    eternal_compat = true, --can it be eternal
+    perishable_compat = true, --can it be perishable
+    pos = {x = 5, y = 0}, --position in joker spritesheet, starts at 0, scales by the atlas' card size (px and py): {x = 1, y = 0} would mean the sprite is 71 pixels to the right
+    config = { 
+    },
+    --local variables unique to this joker
+    --Recalculated when description shown
+    loc_vars = function(self,info_queue,center) --center refers to the "config" variable 
+        return  --returns an array of variables to the description
+    end,
+    --Calculate function performed during score calculatio. This is where the effects should be triggered!
+    calculate = function(self,card,context)
+
+        if context.joker_main then
+            return { 
+                xmult = #context.scoring_hand
+            }
         end
 
     end,
