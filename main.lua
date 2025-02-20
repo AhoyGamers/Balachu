@@ -230,55 +230,63 @@ SMODS.Joker{
     end,
 }
 
---Will--
+--Maple Get those bil ol ears out of my joker--
 SMODS.Joker{
     key = 'GetThoseEarsOut', --How the code refers to the joker
     loc_txt = { -- local text
         name = 'Get Those Big Ol\' ears out of my Joker!',
         text = {
-         'Idk maple is cool', --#<number># refers to the arary index (starting from 1!!) of the returned vars from loc_vars function
+         'Gains {C:mult}+1 Mult{} per', 
+         '{C:attention}consecutive{} hand played without',
+         'changing the {C:attention}poker hand{} type',
+         '{C:gray}(Currently{} {C:mult}+#1#{} {C:gray}Mult){}'
         },
     },
     atlas = 'Jokers', --atlas' key
     rarity = 1, --rarity: 1 = Common, 2 = Uncommon, 3 = Rare, 4 = Legendary
-    cost = 4, --cost
+    cost = 5, --cost
     unlocked = true, --where it is unlocked or not: if true, 
     discovered = true, --whether or not it starts discovered
     blueprint_compat = true, --can it be blueprinted/brainstormed/other (should only copy the mult NOT the card destruction!)
     eternal_compat = true, --can it be eternal
-    perishable_compat = true, --can it be perishable
+    perishable_compat = false, --can it be perishable
     pos = {x = 3, y = 0}, --position in joker spritesheet, starts at 0, scales by the atlas' card size (px and py): {x = 1, y = 0} would mean the sprite is 71 pixels to the right
     config = { 
       extra = {
-        give_bonus_chips = 0
+        mult = 0,
+        played_hand_type = 'UNSET'
       }
     },
     --local variables unique to this joker
     --Recalculated when description shown
     loc_vars = function(self,info_queue,center) --center refers to the "config" variable 
-        return {vars = {center.ability.extra.chips}} --returns an array of variables to the description
+        return {vars = {center.ability.extra.mult}} --returns an array of variables to the description
     end,
     --Calculate function performed during score calculatio. This is where the effects should be triggered!
     calculate = function(self,card,context)
 
-        if context.joker_main then 
-            if card.ability.extra.give_bonus_chips == 1 then
-                card.ability.extra.give_bonus_chips = 0
-				return {
-                    message = 'Scada Bonus!',
-                    colour = { 0, 0, 1, 1 },
-				}
-			end
+        --Before scoring begins, check if we need to reset
+        if context.cardarea == G.jokers and context.before then
+            --If unset, allow +1 regardless to player can start
+            if card.ability.extra.played_hand_type == 'UNSET' then
+                card.ability.extra.mult = card.ability.extra.mult + 1
+                card.ability.extra.played_hand_type = context.scoring_name
+            elseif next(context.poker_hands[card.ability.extra.played_hand_type]) then --If set, check if the type matches
+                card.ability.extra.mult = card.ability.extra.mult + 1
+            else --Player breaks consecutiveness
+                card.ability.extra.mult = 0
+                card.ability.extra.played_hand_type = context.scoring_name
+                return {
+                    message = 'RESET'
+                }
+            end
         end
 
-        if context.individual and context.cardarea == G.play then 
-            if context.other_card:get_id() == 4 or context.other_card:get_id() == 14 or context.other_card:get_id() == 8 then
-                card.ability.extra.give_bonus_chips = 1
-                return
-                {
-                    chips = 502
-                }
-			end
+        --Apply mult
+        if context.joker_main then 
+			return {
+                mult = card.ability.extra.mult
+			}
         end
 
     end,
