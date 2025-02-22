@@ -321,7 +321,7 @@ return {
             bl_wheel={
                 name="The Wheel",
                 text={
-                    " in 7 cards get",
+                    "1 in 7 cards get",
                     "drawn face down",
                 },
             },
