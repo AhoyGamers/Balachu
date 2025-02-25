@@ -154,7 +154,6 @@ SMODS.Joker{
     end,
 }
 
-
 --Otterly tyop--
 SMODS.Joker{
     key = 'OtterlyTyop', --How the code refers to the joker
@@ -510,6 +509,53 @@ SMODS.Joker{
                 }
             end
 
+        end
+
+    end,
+    in_pool = function(self,wawa,wawa2)
+        --whether or not this card is in the pool, return true if it is, return false if its not
+        return true
+    end,
+}
+
+--Raiju Daki--
+SMODS.Joker{
+    key = 'Dakimakura', --How the code refers to the joker
+    loc_txt = { -- local text
+        name = 'Dakimakura',
+        text = {
+          'Gives {C:chips}+50 Chips{}',
+          'per hands left this round.', --#<number># refers to the arary index (starting from 1!!) of the returned vars from loc_vars function
+          '{C:gray}(Currently{} {C:chips}+#1# Chips{} {C:gray}Chips){}'
+        },
+    },
+    atlas = 'Jokers', --atlas' key
+    rarity = 1, --rarity: 1 = Common, 2 = Uncommon, 3 = Rare, 4 = Legendary
+    cost = 4, --cost
+    unlocked = true, --where it is unlocked or not: if true, 
+    discovered = true, --whether or not it starts discovered
+    blueprint_compat = true, --can it be blueprinted/brainstormed/other (should only copy the mult NOT the card destruction!)
+    eternal_compat = true, --can it be eternal
+    perishable_compat = true, --can it be perishable
+    pos = {x = 3, y = 1}, --position in joker spritesheet, starts at 0, scales by the atlas' card size (px and py): {x = 1, y = 0} would mean the sprite is 71 pixels to the right
+    config = { 
+      extra = {
+        chips = 0 --How many chips left
+      }
+    },
+    --local variables unique to this joker
+    --Recalculated when description shown
+    loc_vars = function(self,info_queue,center) --center refers to the "config" variable 
+        
+        return {vars = {G.GAME.current_round.hands_left*50}} --returns an array of variables to the description
+    end,
+    --Calculate function performed during score calculatio. This is where the effects should be triggered!
+    calculate = function(self,card,context)
+
+        if context.joker_main then
+            return { 
+                chips = (G.GAME.current_round.hands_left+1)*50
+            }
         end
 
     end,
