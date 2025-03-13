@@ -200,7 +200,7 @@ SMODS.Joker{
                     update_hand_text({ delay = 0 }, { mult = mult, chips = hand_chips })
                     SMODS.juice_up_blind()
                     return {
-                        message = "typo!"
+                        message = "Chips!"
                     }
                 end
 
@@ -210,7 +210,7 @@ SMODS.Joker{
                     update_hand_text({ delay = 0 }, { mult = mult, chips = hand_chips })
                     SMODS.juice_up_blind()
                     return {
-                        message = "tyop!"
+                        message = "Mult!"
                     }
                 end
             end
@@ -526,7 +526,7 @@ SMODS.Joker{
         text = {
           'Gives {C:chips}+50 Chips{}',
           'per hands left this round.', --#<number># refers to the arary index (starting from 1!!) of the returned vars from loc_vars function
-          '{C:gray}(Currently{} {C:chips}+#1# Chips{} {C:gray}Chips){}'
+          '{C:gray}(Currently{} {C:chips}+#1# Chips{}'
         },
     },
     atlas = 'Jokers', --atlas' key
@@ -565,12 +565,77 @@ SMODS.Joker{
     end,
 }
 
+--Thundering raiju--
+SMODS.Joker{
+    key = 'ThunderingRaiju', --How the code refers to the joker
+    loc_txt = { -- local text
+        name = 'Thundering Raiju',
+        text = {
+          'Thundering Raiju deals {X:mult,C:white} X1 {} Mult',
+          'where X is the number of',
+        'enhanced jokers you control',
+          'other than thundering raiju.',
+          '{C:inactive}(Foil, polychrome, and negative{}',
+           '{C:inactive}are all modifications){}',
+          '{C:inactive}Currently{} {X:mult,C:white} X#1# {} {C:inactive}Mult{}'
+        },
+    },
+    atlas = 'Jokers', --atlas' key
+    rarity = 2, --rarity: 1 = Common, 2 = Uncommon, 3 = Rare, 4 = Legendary
+    cost = 4, --cost
+    unlocked = true, --where it is unlocked or not: if true, 
+    discovered = true, --whether or not it starts discovered
+    blueprint_compat = true, --can it be blueprinted/brainstormed/other (should only copy the mult NOT the card destruction!)
+    eternal_compat = true, --can it be eternal
+    perishable_compat = true, --can it be perishable
+    pos = {x = 4, y = 1}, --position in joker spritesheet, starts at 0, scales by the atlas' card size (px and py): {x = 1, y = 0} would mean the sprite is 71 pixels to the right
+    config = { 
+      extra = {
+        mult = 1
+      }
+    },
+    --local variables unique to this joker
+    --Recalculated when description shown
+    loc_vars = function(self,info_queue,center) --center refers to the "config" variable 
+        local displayedMult = 0
+        if pcall(getModifiedJokers) then
+            displayedMult = getModifiedJokers()
+        end
+        center.ability.extra.mult = displayedMult
+        return {vars = {displayedMult}} --returns an array of variables to the description
+    end,
+    --Calculate function performed during score calculatio. This is where the effects should be triggered!
+    calculate = function(self,card,context)
+
+        if context.joker_main then
+            return { 
+                xmult = getModifiedJokers()
+            }
+        end
+    end,
+    in_pool = function(self,wawa,wawa2)
+        --whether or not this card is in the pool, return true if it is, return false if its not
+        return true
+    end,
+}
+
+
 --Generic functions not tied to any specific card--
 
+--returns how many 2's are in the player's deck
 function getNumOfTwos()
-    tally = 0
+    local tally = 0
     for k, v in pairs(G.playing_cards) do
         if v:get_id() == 2 then tally = tally+1 end
+    end
+    return tally
+end
+
+--Returns how many modified jokers the player has
+function getModifiedJokers()
+    local tally = 0
+    for k, v in pairs(G.jokers.cards) do
+        if v.edition then tally = tally+1 end
     end
     return tally
 end

@@ -2597,7 +2597,7 @@ return {
                 },
             },
             stake_green={
-                name="Green Stake",
+                name="Kel Stake",
                 text={
                     "Required score scales",
                     "faster for each {C:attention}Ante",
