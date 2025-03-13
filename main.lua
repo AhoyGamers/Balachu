@@ -573,10 +573,10 @@ SMODS.Joker{
         text = {
           'Thundering Raiju deals {X:mult,C:white} X1 {} Mult',
           'where X is the number of',
-        'enhanced jokers you control',
-          'other than thundering raiju.',
-          '{C:inactive}(Foil, polychrome, and negative{}',
-           '{C:inactive}are all modifications){}',
+        ' enhanced jokers you control.',
+          '{C:inactive}(Foil, holographic,',
+           '{C:inactive}polychrome, and negative',
+           '{C:inactive}are all enhancements){}',
           '{C:inactive}Currently{} {X:mult,C:white} X#1# {} {C:inactive}Mult{}'
         },
     },
@@ -601,17 +601,108 @@ SMODS.Joker{
         if pcall(getModifiedJokers) then
             displayedMult = getModifiedJokers()
         end
-        center.ability.extra.mult = displayedMult
+        if displayedMult < 1 then
+            return {vars = {1}}
+        end
         return {vars = {displayedMult}} --returns an array of variables to the description
     end,
     --Calculate function performed during score calculatio. This is where the effects should be triggered!
     calculate = function(self,card,context)
 
         if context.joker_main then
+            local numOfEnhancedJokers = getModifiedJokers()
+            if numOfEnhancedJokers < 1 then
+                return { 
+                    xmult = 1
+                }
+            end
+
             return { 
                 xmult = getModifiedJokers()
             }
         end
+    end,
+    in_pool = function(self,wawa,wawa2)
+        --whether or not this card is in the pool, return true if it is, return false if its not
+        return true
+    end,
+}
+
+
+
+--Raichu pokemon TCG card--
+SMODS.Joker{
+    key = 'ShinyRaichu', --How the code refers to the joker
+    loc_txt = { -- local text
+        name = 'Shiny Raichu',
+        text = {
+            '{C:green}1 in 6{} chance',
+            'to add a Foil, Holographic',
+            'or Polychrome to a random', 
+            'joker at the end of a round',
+            '{C:inactive}(Will not affect jokers that already{}',
+            '{C:inactive}have an enhancement){}'
+        },
+    },
+    atlas = 'Jokers', --atlas' key
+    rarity = 2, --rarity: 1 = Common, 2 = Uncommon, 3 = Rare, 4 = Legendary
+    cost = 5, --cost
+    unlocked = true, --where it is unlocked or not: if true, 
+    discovered = true, --whether or not it starts discovered
+    blueprint_compat = false, --can it be blueprinted/brainstormed/other (should only copy the mult NOT the card destruction!)
+    eternal_compat = true, --can it be eternal
+    perishable_compat = true, --can it be perishable
+    pos = {x = 0, y = 2}, --position in joker spritesheet, starts at 0, scales by the atlas' card size (px and py): {x = 1, y = 0} would mean the sprite is 71 pixels to the right
+    config = { 
+      extra = {
+      }
+    },
+    --local variables unique to this joker
+    --Recalculated when description shown
+    loc_vars = function(self,info_queue,center) --center refers to the "config" variable 
+        return {} --returns an array of variables to the description
+    end,
+    --Calculate function performed during score calculatio. This is where the effects should be triggered!
+    calculate = function(self,card,context)
+
+        
+        --end of round effects
+        if context.end_of_round and context.cardarea == G.jokers then
+            local odds = pseudorandom(pseudoseed('RaichuTCG'))
+            if odds < G.GAME.probabilities.normal/1 then
+
+                local num_of_eligible_jokers = 0
+                local eligible_editionless_jokers = EMPTY(eligible_editionless_jokers)
+                for k, v in pairs(G.jokers.cards) do
+                    if v.ability.set == 'Joker' and (not v.edition) then
+                        table.insert(eligible_editionless_jokers, v)
+                        num_of_eligible_jokers = num_of_eligible_jokers + 1
+                    end
+                end
+                
+                --No jokers that have not been enhanced
+                if num_of_eligible_jokers == 0 then
+                    return {}
+                end
+
+                G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.4, func = function()
+                    local eligible_card = pseudorandom_element(eligible_editionless_jokers, pseudoseed('ShinyRaichu'))
+                    local over = false
+                    local edition = nil
+                    edition = poll_edition('wheel_of_fortune', nil, true, true)
+                    eligible_card:set_edition(edition, true)
+                return true end }))
+
+                return {
+                    message = "Enhanced!"
+                }
+            end
+        end
+            --pseudorandom returns a value between 0 and 1
+            --Game probability.normal is just the variable "normal" in the "Game" init function. Use it if you want it to be affected by probability modifiers
+            --normal is always just 1, so you can just divide it by how unlikely you want. So "1 in 4 chance" is just G.GAME.probabilities.normal/4!
+            --You can just send the pseudorandom with the seed being the name of the joker. If pseudorandom returns less than, it matches the odds (so random < 1/4 will only return true one in 4 times)
+        
     end,
     in_pool = function(self,wawa,wawa2)
         --whether or not this card is in the pool, return true if it is, return false if its not
