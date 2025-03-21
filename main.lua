@@ -740,10 +740,37 @@ SMODS.Joker{
     --Calculate function performed during score calculatio. This is where the effects should be triggered!
     calculate = function(self,card,context)
 
-        if context.joker_main then
-            return { 
-                xmult = #context.scoring_hand
-            }
+        --Some extra disables because the player might trigger these before playing a hand
+        if context.setting_blind then
+            for k, v in pairs(G.jokers.cards) do
+                if v.ability.name == 'Ramen' then
+                    v.ability.extra = 0
+                end
+            end
+        end
+
+        --Take away all the extra removals of the base game vanilla jokers
+        --Done over and over in case the food jokers are generated from Judgement card
+        if context.other_joker then
+            --Prevent popcorn from decreasing
+            if context.other_joker.ability.name == 'Popcorn' then
+                context.other_joker.ability.extra = 0
+            elseif context.other_joker.ability.name == 'Ramen' then
+                context.other_joker.ability.extra = 0
+            end
+
+        end
+
+        --This context is used for effects after scoring.
+        --Return the decrease value when case kel gets sold
+        if context.selling_card then
+                for k, v in pairs(G.jokers.cards) do
+                    if v.ability.name == 'Popcorn' then
+                        v.ability.extra = 4
+                    elseif v.ability.name == 'Ramen' then
+                        v.ability.extra = 0.01
+                    end
+                end
         end
 
     end,
