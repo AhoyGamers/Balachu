@@ -628,7 +628,6 @@ SMODS.Joker{
     end,
 }
 
-
 --Raichu pokemon TCG card--
 SMODS.Joker{
     key = 'ShinyRaichu', --How the code refers to the joker
@@ -764,19 +763,82 @@ SMODS.Joker{
                 message = 'Refill!'
             }
         end
-
-        if context.other_joker then
-            return {
-                message = context.other_joker.ability.name
-            }
-        end
-
     end,
     in_pool = function(self,wawa,wawa2)
         --whether or not this card is in the pool, return true if it is, return false if its not
         return true
     end,
 }
+
+--Raimew--
+SMODS.Joker{
+    key = 'RaiMew',
+	loc_txt = {
+		name = 'RaiMew',
+		text = {
+			-- Example of using colour in loc_vars as a colour variable, V:1 is what lets the colour change for each suit.
+			"All Lucky {V:1}#1#{} cards",
+			"will trigger all random effects",
+			"{C:inactive}(Suit changes every round){}",
+		}
+	},
+	blueprint_compat = false,
+	perishable_compat = false,
+	eternal_compat = true,
+	rarity = 2,
+	cost = 6,
+	config = { extra = { should_store_probabilities = 1, old_probabilities = 1 } },
+	atlas = 'Jokers',
+	pos = { x = 5, y = 1 },
+	loc_vars = function(self, info_queue, card)
+		return {
+			vars = {
+				localize(G.GAME.current_round.castle2_card.suit, 'suits_singular'), -- gets the localized name of the suit
+				colours = { G.C.SUITS[G.GAME.current_round.castle2_card.suit] } -- sets the colour of the text affected by `{V:1}`
+			}
+		}
+	end,
+    calculate = function(self,card,context)
+
+        --Check if the first card is lucky
+        if context.before then
+            card.ability.cur_index = 1
+            if context.scoring_hand[1].ability.effect == "Lucky Card" and context.scoring_hand[card.ability.cur_index]:is_suit(G.GAME.current_round.castle2_card.suit) then
+                card.ability.extra.old_probabilities = G.GAME.probabilities.normal
+                card.ability.extra.should_store_probabilities = 0
+                G.GAME.probabilities.normal = 100
+            end
+        end
+
+        --Triggers PER card
+        if context.individual and context.cardarea == G.play then
+            card.ability.cur_index = card.ability.cur_index+1 --check the NEXT card
+            --Make sure not to overflow
+            if card.ability.cur_index <= #context.scoring_hand then
+                --so if the NEXT card is lucky, then activate the luck at the end of scoring
+                --Because this function actually triggers AFTER a card has been evaluated
+                if context.scoring_hand[card.ability.cur_index].ability.effect == "Lucky Card" and context.scoring_hand[card.ability.cur_index]:is_suit(G.GAME.current_round.castle2_card.suit) then
+                    if card.ability.extra.should_store_probabilities == 1 then
+                        card.ability.extra.old_probabilities = G.GAME.probabilities.normal
+                        card.ability.extra.should_store_probabilities = 0
+                        G.GAME.probabilities.normal = 100
+                    end
+                else
+                    --Return to normal since lucky card streak has been finished 
+                    G.GAME.probabilities.normal = card.ability.extra.old_probabilities
+                    card.ability.extra.should_store_probabilities = 1
+                end
+            else
+                --deactivate luck if no more cards to score
+                G.GAME.probabilities.normal = card.ability.extra.old_probabilities
+                card.ability.extra.should_store_probabilities = 1
+            end
+        end
+
+    end
+
+}
+
 
 --Generic functions not tied to any specific card--
 
@@ -797,6 +859,37 @@ function getModifiedJokers()
     end
     return tally
 end
+
+--[[ This is called a hook. It's a less intrusive way of running your code when base game functions
+	get called than lovely injections. It works by saving the base game function, local igo, then
+	overwriting the current function with your own. You then run the saved function, igo, to make
+	the function do everything it was previously already doing, and then you add your code in, so
+	that it runs either before or after the rest of the function gets used.
+							
+	This function hooks into Game:init_game_object in order to create the custom
+	G.GAME.current_round.castle2_card variable that the above joker uses whenever a run starts.]]
+    local igo = Game.init_game_object
+    function Game:init_game_object()
+        local ret = igo(self)
+        ret.current_round.castle2_card = { suit = 'Spades' }
+        return ret
+    end
+    
+    -- This is a part 2 of the above thing, to make the custom G.GAME variable change every round.
+    function SMODS.current_mod.reset_game_globals(run_start)
+        -- The suit changes every round, so we use reset_game_globals to choose a suit.
+        G.GAME.current_round.castle2_card = { suit = 'Spades' }
+        local valid_castle_cards = {}
+        for _, v in ipairs(G.playing_cards) do
+            if not SMODS.has_no_suit(v) then -- Abstracted enhancement check for jokers being able to give cards additional enhancements
+                valid_castle_cards[#valid_castle_cards + 1] = v
+            end
+        end
+        if valid_castle_cards[1] then
+            local castle_card = pseudorandom_element(valid_castle_cards, pseudoseed('2cas' .. G.GAME.round_resets.ante))
+            G.GAME.current_round.castle2_card.suit = castle_card.base.suit
+        end
+    end
 
 ----------------------------------------------
 ------------MOD CODE END----------------------
