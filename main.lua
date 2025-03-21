@@ -27,7 +27,7 @@ SMODS.Joker{
     },
     atlas = 'Jokers', --atlas' key
     rarity = 1, --rarity: 1 = Common, 2 = Uncommon, 3 = Rare, 4 = Legendary
-    cost = 2, --cost
+    cost = 4, --cost
     unlocked = true, --where it is unlocked or not: if true, 
     discovered = true, --whether or not it starts discovered
     blueprint_compat = true, --can it be blueprinted/brainstormed/other
@@ -168,7 +168,7 @@ SMODS.Joker{
     },
     atlas = 'Jokers', --atlas' key
     rarity = 3, --rarity: 1 = Common, 2 = Uncommon, 3 = Rare, 4 = Legendary
-    cost = 11, --cost
+    cost = 7, --cost
     unlocked = true, --where it is unlocked or not: if true, 
     discovered = true, --whether or not it starts discovered
     blueprint_compat = false, --can it be blueprinted/brainstormed/other
@@ -308,7 +308,7 @@ SMODS.Joker{
     },
     atlas = 'Jokers', --atlas' key
     rarity = 1, --rarity: 1 = Common, 2 = Uncommon, 3 = Rare, 4 = Legendary
-    cost = 4, --cost
+    cost = 5, --cost
     unlocked = true, --where it is unlocked or not: if true, 
     discovered = true, --whether or not it starts discovered
     blueprint_compat = true, --can it be blueprinted/brainstormed/other (should only copy the mult NOT the card destruction!)
@@ -474,7 +474,7 @@ SMODS.Joker{
     },
     atlas = 'Jokers', --atlas' key
     rarity = 2, --rarity: 1 = Common, 2 = Uncommon, 3 = Rare, 4 = Legendary
-    cost = 8, --cost
+    cost = 7, --cost
     unlocked = true, --where it is unlocked or not: if true, 
     discovered = true, --whether or not it starts discovered
     blueprint_compat = true, --can it be blueprinted/brainstormed/other (should only copy the mult NOT the card destruction!)
@@ -531,7 +531,7 @@ SMODS.Joker{
     },
     atlas = 'Jokers', --atlas' key
     rarity = 1, --rarity: 1 = Common, 2 = Uncommon, 3 = Rare, 4 = Legendary
-    cost = 4, --cost
+    cost = 7, --cost
     unlocked = true, --where it is unlocked or not: if true, 
     discovered = true, --whether or not it starts discovered
     blueprint_compat = true, --can it be blueprinted/brainstormed/other (should only copy the mult NOT the card destruction!)
@@ -582,7 +582,7 @@ SMODS.Joker{
     },
     atlas = 'Jokers', --atlas' key
     rarity = 2, --rarity: 1 = Common, 2 = Uncommon, 3 = Rare, 4 = Legendary
-    cost = 4, --cost
+    cost = 6, --cost
     unlocked = true, --where it is unlocked or not: if true, 
     discovered = true, --whether or not it starts discovered
     blueprint_compat = true, --can it be blueprinted/brainstormed/other (should only copy the mult NOT the card destruction!)
@@ -715,21 +715,24 @@ SMODS.Joker{
     loc_txt = { -- local text
         name = 'Kel',
         text = {
-          '{C:attention}Food-based Jokers{}',
-          'No longer decrease'
+          'When Blind Selected',
+          'refill all {C:attention}Edible Jokers{}',
         },
     },
     atlas = 'Jokers', --atlas' key
     soul_pos = {x=2, y=2}, -- Tells where in the spritesheet the thing to put on top of the card for 3d effect
-    rarity = 3, --rarity: 1 = Common, 2 = Uncommon, 3 = Rare, 4 = Legendary
-    cost = 8, --cost
+    rarity = 2, --rarity: 1 = Common, 2 = Uncommon, 3 = Rare, 4 = Legendary
+    cost = 5, --cost
     unlocked = true, --where it is unlocked or not: if true, 
     discovered = true, --whether or not it starts discovered
     blueprint_compat = false, --can it be blueprinted/brainstormed/other (should only copy the mult NOT the card destruction!)
-    eternal_compat = false, --can it be eternal
+    eternal_compat = true, --can it be eternal
     perishable_compat = true, --can it be perishable
     pos = {x = 1, y = 2}, --position in joker spritesheet, starts at 0, scales by the atlas' card size (px and py): {x = 1, y = 0} would mean the sprite is 71 pixels to the right
     config = { 
+        extra = {
+            seltzer_init = 10 --If player has seltzer, keep its current amount. Seltzer is hard-coded to subtract 1, so instead
+          }
     },
     --local variables unique to this joker
     --Recalculated when description shown
@@ -744,33 +747,28 @@ SMODS.Joker{
         if context.setting_blind then
             for k, v in pairs(G.jokers.cards) do
                 if v.ability.name == 'Ramen' then
-                    v.ability.extra = 0
+                    v.ability.x_mult = 2
+                elseif v.ability.name == 'Popcorn' then
+                    v.ability.mult = 20
+                elseif v.ability.name == 'Ice Cream' then
+                    v.ability.extra.chips = 100
+                elseif v.ability.name == 'Turtle Bean' then
+                    v.ability.h_size = 5
+                elseif v.ability.name == 'Seltzer' then
+                    v.ability.extra = 10
+                elseif v.ability.name == 'j_xmpl_Raibuprofen' then
+                    v.ability.extra.chips = 200
                 end
             end
+            return {
+                message = 'Refill!'
+            }
         end
 
-        --Take away all the extra removals of the base game vanilla jokers
-        --Done over and over in case the food jokers are generated from Judgement card
         if context.other_joker then
-            --Prevent popcorn from decreasing
-            if context.other_joker.ability.name == 'Popcorn' then
-                context.other_joker.ability.extra = 0
-            elseif context.other_joker.ability.name == 'Ramen' then
-                context.other_joker.ability.extra = 0
-            end
-
-        end
-
-        --This context is used for effects after scoring.
-        --Return the decrease value when case kel gets sold
-        if context.selling_card then
-                for k, v in pairs(G.jokers.cards) do
-                    if v.ability.name == 'Popcorn' then
-                        v.ability.extra = 4
-                    elseif v.ability.name == 'Ramen' then
-                        v.ability.extra = 0.01
-                    end
-                end
+            return {
+                message = context.other_joker.ability.name
+            }
         end
 
     end,
