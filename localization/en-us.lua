@@ -2293,8 +2293,7 @@ return {
             guestartist0 = {
 				name = "Artist",
 				text = {
-					"{E:1}Aaron_Growlithe",
-                    "Chilemex head"
+					"{E:1}Aaron_Growlithe"
 				},
             },
             guestartist1 = {
@@ -2309,6 +2308,12 @@ return {
                 text = {
                     "{E:1}KogiKogiKogi",
                     "Daki Design"
+                },
+            },
+            guestartist3 = {
+                name = "Artist",
+                text = {
+                    "{E:1}Pokatofry"
                 },
             },
         },
