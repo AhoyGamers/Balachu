@@ -160,9 +160,9 @@ SMODS.Joker{
     loc_txt = { -- local text
         name = 'Otterly Tyop',
         text = {
-          '{C:green}1 in 2{} chnace orf',
+          '{C:green}1 in 4{} chnace orf',
           '{C:mult}10x Mult{} ot be addded to {C:chips}Chips{}',
-          '{C:green}1 in 4{} chcnae fro ',
+          '{C:green}1 in 8{} chcnae fro ',
           '{C:attention}10%{} of {C:chips}Chips{} to eb aded ot {C:mult}Mult{}.'
         },
     },
@@ -177,8 +177,8 @@ SMODS.Joker{
     pos = {x = 2, y = 0}, --position in joker spritesheet, starts at 0, scales by the atlas' card size (px and py): {x = 1, y = 0} would mean the sprite is 71 pixels to the right
     config = { 
       extra = {
-        oddsMultToChip = 2, --1 in 2, so save the "in x"
-        oddsChipToMult = 4 --1 in 4
+        oddsMultToChip = 4, --1 in 2, so save the "in x"
+        oddsChipToMult = 8 --1 in 4
       }
     },
     --local variables unique to this joker
