@@ -423,8 +423,9 @@ SMODS.Joker{
     loc_txt = { -- local text
         name = 'Chilemex',
         text = {
-          'Cards with tails in their art',
-          'give {X:mult,C:white} X1.5 {} Mult',
+          'Gains {X:mult,C:white} X0.25 {} Mult',
+          'every time you draw from your deck',
+          '{C:inactive} Currently {} {X:mult,C:white} X#1# {} {C:inactive} Mult {}'
         },
     },
     atlas = 'Jokers', --atlas' key
@@ -667,7 +668,7 @@ SMODS.Joker{
         --end of round effects
         if context.end_of_round and context.cardarea == G.jokers then
             local odds = pseudorandom(pseudoseed('RaichuTCG'))
-            if odds < G.GAME.probabilities.normal/1 then
+            if odds < G.GAME.probabilities.normal/6 then
 
                 local num_of_eligible_jokers = 0
                 local eligible_editionless_jokers = EMPTY(eligible_editionless_jokers)
