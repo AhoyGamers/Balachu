@@ -423,9 +423,9 @@ SMODS.Joker{
     loc_txt = { -- local text
         name = 'Chilemex',
         text = {
-          'Gains {X:mult,C:white} X0.25 {} Mult',
+          'Gains {X:mult,C:white} X0.05 {} Mult',
           'every time you draw from your deck',
-          '{C:inactive} Currently {} {X:mult,C:white} X#1# {} {C:inactive} Mult {}'
+          '{C:inactive} Currently {}{X:mult,C:white}X#1#{}{C:inactive} Mult {}'
         },
     },
     atlas = 'Jokers', --atlas' key
@@ -439,19 +439,29 @@ SMODS.Joker{
     perishable_compat = true, --can it be perishable
     pos = {x = 0, y = 1}, --position in joker spritesheet, starts at 0, scales by the atlas' card size (px and py): {x = 1, y = 0} would mean the sprite is 71 pixels to the right
     config = { 
+        extra = {
+            card_xmult = 1
+          }
     },
     --local variables unique to this joker
     --Recalculated when description shown
     loc_vars = function(self,info_queue,center) --center refers to the "config" variable 
         info_queue[#info_queue+1] = {key = "guestartist0", set = "Other"} --In the en-us lua file, checks the "other" array for the variable titled whatever the key is
-        return  --returns an array of variables to the description
+        return {vars = {center.ability.extra.card_xmult}} --returns an array of variables to the description
     end,
     --Calculate function performed during score calculatio. This is where the effects should be triggered!
     calculate = function(self,card,context)
 
         if context.joker_main then
             return { 
-                xmult = #context.scoring_hand
+                xmult = card.ability.extra.card_xmult
+            }
+        end
+
+        if context.hand_drawn then
+            card.ability.extra.card_xmult = card.ability.extra.card_xmult + 0.05
+            return {
+                message = "x0.25 mult"
             }
         end
 
@@ -840,6 +850,44 @@ SMODS.Joker{
 
 }
 
+--Birthday button--
+SMODS.Joker{
+    key = 'BirthdayButton', --How the code refers to the joker
+    loc_txt = { -- local text
+        name = 'Birthday Button',
+        text = {
+          'When Blind Selected',
+          'refill all {C:attention}Edible Jokers{}',
+        },
+    },
+    atlas = 'Jokers', --atlas' key
+    rarity = 2, --rarity: 1 = Common, 2 = Uncommon, 3 = Rare, 4 = Legendary
+    cost = 6, --cost
+    unlocked = true, --where it is unlocked or not: if true, 
+    discovered = true, --whether or not it starts discovered
+    blueprint_compat = true, --can it be blueprinted/brainstormed/other (should only copy the mult NOT the card destruction!)
+    eternal_compat = true, --can it be eternal
+    perishable_compat = true, --can it be perishable
+    pos = {x = 3, y = 2}, --position in joker spritesheet, starts at 0, scales by the atlas' card size (px and py): {x = 1, y = 0} would mean the sprite is 71 pixels to the right
+    config = { 
+        extra = {
+            seltzer_init = 10 --If player has seltzer, keep its current amount. Seltzer is hard-coded to subtract 1, so instead
+          }
+    },
+    --local variables unique to this joker
+    --Recalculated when description shown
+    loc_vars = function(self,info_queue,center) --center refers to the "config" variable 
+        return  --returns an array of variables to the description
+    end,
+    --Calculate function performed during score calculatio. This is where the effects should be triggered!
+    calculate = function(self,card,context)
+
+    end,
+    in_pool = function(self,wawa,wawa2)
+        --whether or not this card is in the pool, return true if it is, return false if its not
+        return true
+    end,
+}
 
 --Generic functions not tied to any specific card--
 
@@ -860,6 +908,9 @@ function getModifiedJokers()
     end
     return tally
 end
+
+--IDK this is some code I copy pasted for raimew
+--Does something to interpret a random card suite from the player's deck and put it in raimew
 
 --[[ This is called a hook. It's a less intrusive way of running your code when base game functions
 	get called than lovely injections. It works by saving the base game function, local igo, then
