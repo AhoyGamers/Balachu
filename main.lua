@@ -856,8 +856,9 @@ SMODS.Joker{
     loc_txt = { -- local text
         name = 'Birthday Button',
         text = {
-          'When Blind Selected',
-          'refill all {C:attention}Edible Jokers{}',
+          'Gives {X:mult,C:white} X1 {} Mult equal',
+          'to the current Ante.',
+          '{C:inactive}Currently {}{X:mult,C:white}X#1#{} {C:inactive}Mult{}'
         },
     },
     atlas = 'Jokers', --atlas' key
@@ -870,17 +871,28 @@ SMODS.Joker{
     perishable_compat = true, --can it be perishable
     pos = {x = 3, y = 2}, --position in joker spritesheet, starts at 0, scales by the atlas' card size (px and py): {x = 1, y = 0} would mean the sprite is 71 pixels to the right
     config = { 
-        extra = {
-            seltzer_init = 10 --If player has seltzer, keep its current amount. Seltzer is hard-coded to subtract 1, so instead
-          }
+        card_mult = 1
     },
     --local variables unique to this joker
     --Recalculated when description shown
     loc_vars = function(self,info_queue,center) --center refers to the "config" variable 
-        return  --returns an array of variables to the description
+        return {vars = {G.GAME.round_resets.ante}}  --returns an array of variables to the description
     end,
     --Calculate function performed during score calculatio. This is where the effects should be triggered!
     calculate = function(self,card,context)
+
+        if context.joker_main then
+            return {
+                xmult = G.GAME.round_resets.ante
+            }
+        end
+
+        if context.end_of_round and context.cardarea == G.jokers and G.GAME.blind.boss then
+            return {
+                message = "x1 mult"
+            }
+        end
+        
 
     end,
     in_pool = function(self,wawa,wawa2)
