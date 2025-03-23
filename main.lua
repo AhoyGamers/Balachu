@@ -971,9 +971,8 @@ SMODS.Joker{
         name = 'Me\'s a crowd',
         text = {
             'Scored cards that have the same',
-            '{C:attention}suit{} and {C:attention}rank{}',
-            'as an already-scored card give',
-            '{C:mult}+11{} Mult'
+            '{C:attention}suit{} and {C:attention}rank{} as an',
+            'already-scored card give {C:mult}+11{} Mult'
         },
     },
     atlas = 'Jokers', --atlas' key
