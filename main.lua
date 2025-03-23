@@ -901,14 +901,15 @@ SMODS.Joker{
     end,
 }
 
---Birthday button--
+--Twin Joker--
 SMODS.Joker{
     key = 'Twin', --How the code refers to the joker
     loc_txt = { -- local text
         name = 'Twin Joker',
         text = {
             'If played hand contains a {C:attention}Pair{}',
-            'convert all cards to the first scored card'
+            'convert all cards to the same {C:attention}suit{}',
+            'and {C:attention}rank{} as the first scored card'
         },
     },
     atlas = 'Jokers', --atlas' key
@@ -942,7 +943,9 @@ SMODS.Joker{
                 G.E_MANAGER:add_event(Event({
                     func = function() 
                         --Copy card(<card to copy>, <card to replace>)
-                        copy_card(context.scoring_hand[1], v)
+                        --copy_card(context.scoring_hand[1], v, nil, nil, v.edition)
+                        v:set_ability(context.scoring_hand[1].config.center)
+                        v:set_base(context.scoring_hand[1].config.card)
                         v:juice_up()
                         return true 
                         end }))
