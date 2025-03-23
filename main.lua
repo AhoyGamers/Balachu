@@ -901,6 +901,119 @@ SMODS.Joker{
     end,
 }
 
+--Birthday button--
+SMODS.Joker{
+    key = 'Twin', --How the code refers to the joker
+    loc_txt = { -- local text
+        name = 'Twin Joker',
+        text = {
+            'If played hand contains a {C:attention}Pair{}',
+            'convert all cards to the same {C:attention}suit{}',
+            'and {C:attention}rank{} as the first scored card'
+        },
+    },
+    atlas = 'Jokers', --atlas' key
+    rarity = 1, --rarity: 1 = Common, 2 = Uncommon, 3 = Rare, 4 = Legendary
+    cost = 4, --cost
+    unlocked = true, --where it is unlocked or not: if true, 
+    discovered = true, --whether or not it starts discovered
+    blueprint_compat = true, --can it be blueprinted/brainstormed/other (should only copy the mult NOT the card destruction!)
+    eternal_compat = true, --can it be eternal
+    perishable_compat = true, --can it be perishable
+    pos = {x = 4, y = 2}, --position in joker spritesheet, starts at 0, scales by the atlas' card size (px and py): {x = 1, y = 0} would mean the sprite is 71 pixels to the right
+    config = { 
+    },
+    --local variables unique to this joker
+    --Recalculated when description shown
+    loc_vars = function(self,info_queue,center) --center refers to the "config" variable 
+        return {}  --returns an array of variables to the description
+    end,
+    --Calculate function performed during score calculatio. This is where the effects should be triggered!
+    calculate = function(self,card,context)
+
+        --Next call will check if it contains a pair
+        if context.after and next(context.poker_hands["Pair"]) then
+            
+            local first_card_rank
+            local first_card_suit
+            local is_stone = false
+            local is_wild = false
+            
+            --[[If stone card, copy stone card effect to everyone
+            if context.scoring_hand[1].ability.effect == 'Stone Card' and not context.scoring_hand[1].vampired then
+                
+                first_card_rank = context.scoring_hand[1].base.id
+                first_card_suit = context.scoring_hand[1].base.suit
+            elseif context.scoring_hand[1].ability.name == "Wild Card" then --Wild card = suit is wildcard
+                first_card_rank = context.scoring_hand[1]:get_id()
+                first_card_suit = 'WildCard'
+            else
+                first_card_rank = context.scoring_hand[1]:get_id()
+                first_card_suit = localize(context.scoring_hand[1], 'suits_singular')
+            end
+
+
+            for k, v in pairs(context.full_hand) do
+                
+                if first_card_suite == 'Stone' then
+                    
+                    v.ability.effect = 'Stone Card'
+                elseif first_card_suite == 'WildCard' then
+                    v.ability.name = 'Wild Card'
+                end
+
+                v:set_base(first_card_rank)
+                v:change_suit(first_card_suit)
+            end
+            --]]
+
+            for k, v in pairs(context.full_hand) do
+                --v:change_suit(tostring(context.scoring_hand[1].base.suit))
+                --v:juice_up()
+                
+                G.E_MANAGER:add_event(Event({
+                    func = function() 
+                        local card = context.scoring_hand[1]
+                        local suit_prefix = string.sub(card.base.suit, 1, 1)..'_'
+                        local rank_suffix = '8'
+                        
+                        
+                        --Ten is "T" because localthunk is lazy
+                        if tostring(context.scoring_hand[1].base.value) == '10' then
+                            rank_suffix = 'T'
+                        elseif string.len(rank_suffix) == 1 then --All other numbers are only 1 in length 
+                            rank_suffix = tostring(context.scoring_hand[1].base.value)
+                        else --Face cards are stuff like "King" but we need only the first letter
+                            rank_suffix = string.sub(context.scoring_hand[1].base.value, 1, 1)
+                        end
+                    
+                        --G.P_Cards is expecting "<suit>_<rank>" ex H_K is king of hearts, or C_T is ten of clubs
+                        v:set_base(G.P_CARDS[suit_prefix..rank_suffix]);
+                        --G.hand.cards[i]:flip();
+                        --play_sound('tarot2', percent, 0.6);
+                        --G.hand.cards[i]:juice_up(0.3, 0.3);
+                        --v:set_base(tostring(context.scoring_hand[1].base.value))
+                        --v:change_suit(tostring(context.scoring_hand[1].base.suit));
+                        --v:juice_up();
+                        return true 
+                        end }))
+                
+            end
+
+            return {
+                message = 'Twinned!'
+            }
+        end
+        
+
+    end,
+    in_pool = function(self,wawa,wawa2)
+        --whether or not this card is in the pool, return true if it is, return false if its not
+        return true
+    end,
+}
+
+
 --Generic functions not tied to any specific card--
 
 --returns how many 2's are in the player's deck
