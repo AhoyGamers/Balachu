@@ -908,12 +908,11 @@ SMODS.Joker{
         name = 'Twin Joker',
         text = {
             'If played hand contains a {C:attention}Pair{}',
-            'convert all cards to the same {C:attention}suit{}',
-            'and {C:attention}rank{} as the first scored card'
+            'convert all cards to the first scored card'
         },
     },
     atlas = 'Jokers', --atlas' key
-    rarity = 1, --rarity: 1 = Common, 2 = Uncommon, 3 = Rare, 4 = Legendary
+    rarity = 2, --rarity: 1 = Common, 2 = Uncommon, 3 = Rare, 4 = Legendary
     cost = 4, --cost
     unlocked = true, --where it is unlocked or not: if true, 
     discovered = true, --whether or not it starts discovered
@@ -940,39 +939,17 @@ SMODS.Joker{
             local is_wild = false
 
             for k, v in pairs(context.full_hand) do
-                --v:change_suit(tostring(context.scoring_hand[1].base.suit))
-                --v:juice_up()
-                
                 G.E_MANAGER:add_event(Event({
                     func = function() 
-                        local card = context.scoring_hand[1]
-                        local suit_prefix = string.sub(card.base.suit, 1, 1)..'_'
-                        local rank_suffix = 'Q'
-                        
-                        
-                        --Ten is "T" because localthunk is lazy
-                        if tostring(context.scoring_hand[1].base.value) == '10' then
-                            rank_suffix = 'T'
-                        else --Everything else can use the "first letter" (for face cards) or just the number (which is already satified by getting the first index)
-                            rank_suffix = string.sub(context.scoring_hand[1].base.value, 1, 1)
-                        end
-
-                        --Copy or remove wildcard or stone card effects
-                        if card.ability.effect == 'Stone Card' then
-                            v:set_ability(G.P_CENTERS["m_stone"])
-                        else
-                            v:set_ability(G.P_CENTERS.c_base, nil, true) --Sending c_base will remove edition
-                        end
-                    
-                        --G.P_Cards is expecting "<suit>_<rank>" ex H_K is king of hearts, or C_T is ten of clubs
-                        v:set_base(G.P_CARDS[suit_prefix..rank_suffix]);
-                        v:juice_up();
+                        --Copy card(<card to copy>, <card to replace>)
+                        copy_card(context.scoring_hand[1], v)
+                        v:juice_up()
                         return true 
                         end }))
                 
             end
             return {
-                message = 'Twinned!'
+                message = tostring(context.scoring_hand[1].ability.effect)
             }
         end
         
