@@ -458,10 +458,10 @@ SMODS.Joker{
             }
         end
 
-        if context.hand_drawn then
+        if context.hand_drawn and not context.blueprint then
             card.ability.extra.card_xmult = card.ability.extra.card_xmult + 0.05
             return {
-                message = "x0.25 mult"
+                message = "x0.05 mult"
             }
         end
 
@@ -956,6 +956,71 @@ SMODS.Joker{
             }
         end
         
+
+    end,
+    in_pool = function(self,wawa,wawa2)
+        --whether or not this card is in the pool, return true if it is, return false if its not
+        return true
+    end,
+}
+
+--Me's a crowd Joker--
+SMODS.Joker{
+    key = 'MesACrowd', --How the code refers to the joker
+    loc_txt = { -- local text
+        name = 'Me\'s a crowd',
+        text = {
+            'Scored cards that have the same',
+            '{C:attention}suit{} and {C:attention}rank{}',
+            'as an already-scored card give',
+            '{C:mult}+11{} Mult'
+        },
+    },
+    atlas = 'Jokers', --atlas' key
+    rarity = 1, --rarity: 1 = Common, 2 = Uncommon, 3 = Rare, 4 = Legendary
+    cost = 6, --cost
+    unlocked = true, --where it is unlocked or not: if true, 
+    discovered = true, --whether or not it starts discovered
+    blueprint_compat = true, --can it be blueprinted/brainstormed/other 
+    eternal_compat = true, --can it be eternal
+    perishable_compat = true, --can it be perishable
+    pos = {x = 5, y = 2}, --position in joker spritesheet, starts at 0, scales by the atlas' card size (px and py): {x = 1, y = 0} would mean the sprite is 71 pixels to the right
+    config = { 
+        extra = {
+            mult = 11,
+            card_list = { }
+        }
+    },
+    --local variables unique to this joker
+    --Recalculated when description shown
+    loc_vars = function(self,info_queue,center) --center refers to the "config" variable 
+        return {}  --returns an array of variables to the description
+    end,
+    --Calculate function performed during score calculatio. This is where the effects should be triggered!
+    calculate = function(self,card,context)
+
+        if context.individual and context.cardarea == G.play then
+            for k, v in pairs(card.ability.extra.card_list) do
+                if (v:get_id() == context.other_card:get_id())
+                and (v:is_suit(context.other_card.base.suit) or context.other_card.config.center == G.P_CENTERS.m_wild)
+                or (context.other_card.config.center == G.P_CENTERS.m_stone and v.config.center == G.P_CENTERS.m_stone) then --Allow stone card duplicates
+                    return {
+                        mult = card.ability.extra.mult,
+                        card = card
+                    }
+                end
+            end
+
+            if not context.blueprint then
+                    table.insert(card.ability.extra.card_list, context.other_card) 
+            end
+
+        end
+
+        --Clear list of scored cards after hand calculated
+        if context.after and not context.other_card then 
+            card.ability.extra.card_list = {}
+        end 
 
     end,
     in_pool = function(self,wawa,wawa2)
