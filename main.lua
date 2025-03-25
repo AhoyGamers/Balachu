@@ -1028,6 +1028,61 @@ SMODS.Joker{
     end,
 }
 
+--Otterly--
+SMODS.Joker{
+    key = 'Otterly', --How the code refers to the joker
+    loc_txt = { -- local text
+        name = 'Otterly',
+        text = {
+            'Gives a {C:attention}Negative Misprint{}',
+            'when a {C:attention}Boss Blind{} is defeated'
+        },
+    },
+    atlas = 'Jokers', --atlas' key
+    rarity = 3, --rarity: 1 = Common, 2 = Uncommon, 3 = Rare, 4 = Legendary
+    cost = 5, --cost
+    unlocked = true, --where it is unlocked or not: if true, 
+    discovered = true, --whether or not it starts discovered
+    blueprint_compat = false, --can it be blueprinted/brainstormed/other 
+    eternal_compat = true, --can it be eternal
+    perishable_compat = true, --can it be perishable
+    pos = {x = 0, y = 3}, --position in joker spritesheet, starts at 0, scales by the atlas' card size (px and py): {x = 1, y = 0} would mean the sprite is 71 pixels to the right
+    config = { 
+        extra = {
+
+        }
+    },
+    --local variables unique to this joker
+    --Recalculated when description shown
+    loc_vars = function(self,info_queue,center) --center refers to the "config" variable 
+        info_queue[#info_queue + 1] = G.P_CENTERS.j_misprint
+        return {}  --returns an array of variables to the description
+    end,
+    --Calculate function performed during score calculatio. This is where the effects should be triggered!
+    calculate = function(self,card,context)
+
+        if context.end_of_round and context.cardarea == G.jokers and not context.blueprint and not context.retrigger_joker and G.GAME.blind.boss then
+            G.E_MANAGER:add_event(Event({
+                func = function() 
+
+                local card = create_card("Joker", G.jokers, nil, nil, nil, nil, "j_misprint")
+                card:set_edition({ negative = true,})
+                card:add_to_deck()
+                G.jokers:emplace(card)
+
+                return true
+                end}))   
+        end
+
+
+    end,
+    in_pool = function(self,wawa,wawa2)
+        --whether or not this card is in the pool, return true if it is, return false if its not
+        return true
+    end,
+}
+
+
 
 --Generic functions not tied to any specific card--
 
