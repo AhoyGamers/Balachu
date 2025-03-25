@@ -270,7 +270,7 @@ SMODS.Joker{
             if card.ability.extra.played_hand_type == 'UNSET' then
                 card.ability.extra.mult = card.ability.extra.mult + 1
                 card.ability.extra.played_hand_type = context.scoring_name
-            elseif next(context.poker_hands[card.ability.extra.played_hand_type]) then --If set, check if the type matches
+            elseif card.ability.extra.played_hand_type == context.scoring_name then --If set, check if the type matches
                 card.ability.extra.mult = card.ability.extra.mult + 1
             else --Player breaks consecutiveness
                 card.ability.extra.mult = 0
