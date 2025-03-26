@@ -537,7 +537,7 @@ SMODS.Joker{
         text = {
           'Gives {C:chips}+50 Chips{}',
           'per hands left this round.', --#<number># refers to the arary index (starting from 1!!) of the returned vars from loc_vars function
-          '{C:gray}(Currently{} {C:chips}+#1# Chips{}'
+          '{C:gray}(Currently{} {C:chips}+#1# Chips{})'
         },
     },
     atlas = 'Jokers', --atlas' key
@@ -1034,11 +1034,12 @@ SMODS.Joker{
     loc_txt = { -- local text
         name = 'Otterly',
         text = {
-            'Gives a {C:attention}Negative Misprint{}',
+            'Creates a {C:attention}Negative Misprint{}',
             'when a {C:attention}Boss Blind{} is defeated'
         },
     },
     atlas = 'Jokers', --atlas' key
+    soul_pos = {x=1, y=3},
     rarity = 3, --rarity: 1 = Common, 2 = Uncommon, 3 = Rare, 4 = Legendary
     cost = 5, --cost
     unlocked = true, --where it is unlocked or not: if true, 
@@ -1056,6 +1057,7 @@ SMODS.Joker{
     --Recalculated when description shown
     loc_vars = function(self,info_queue,center) --center refers to the "config" variable 
         info_queue[#info_queue + 1] = G.P_CENTERS.j_misprint
+        info_queue[#info_queue+1] = {key = "guestartist3", set = "Other"} --In the en-us lua file, checks the "other" array for the variable titled whatever the key is
         return {}  --returns an array of variables to the description
     end,
     --Calculate function performed during score calculatio. This is where the effects should be triggered!
