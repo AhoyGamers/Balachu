@@ -1063,7 +1063,7 @@ SMODS.Joker{
     --Calculate function performed during score calculatio. This is where the effects should be triggered!
     calculate = function(self,card,context)
 
-        if context.end_of_round and context.cardarea == G.jokers and not context.blueprint and not context.retrigger_joker and G.GAME.blind.boss then
+        if context.end_of_round and context.cardarea == G.jokers and not context.retrigger_joker and G.GAME.blind.boss then
             G.E_MANAGER:add_event(Event({
                 func = function() 
 
@@ -1100,7 +1100,7 @@ SMODS.Joker{
     cost = 5, --cost
     unlocked = true, --where it is unlocked or not: if true, 
     discovered = true, --whether or not it starts discovered
-    blueprint_compat = false, --can it be blueprinted/brainstormed/other 
+    blueprint_compat = true, --can it be blueprinted/brainstormed/other 
     eternal_compat = false, --can it be eternal
     perishable_compat = true, --can it be perishable
     pos = {x = 2, y = 3}, --position in joker spritesheet, starts at 0, scales by the atlas' card size (px and py): {x = 1, y = 0} would mean the sprite is 71 pixels to the right
@@ -1172,6 +1172,7 @@ SMODS.Joker{
 
         --end of round effects
         if context.end_of_round and context.cardarea == G.jokers then
+            card:juice_up()
             update_hand_text({sound = 'button', volume = 0.7, pitch = 0.8, delay = 0.3}, {handname=localize(card.ability.extra.final_poker_hand, 'poker_hands'),chips = G.GAME.hands[card.ability.extra.final_poker_hand].chips, mult = G.GAME.hands[card.ability.extra.final_poker_hand].mult, level=G.GAME.hands[card.ability.extra.final_poker_hand].level})
             level_up_hand(nil, card.ability.extra.final_poker_hand, nil, 1)
             update_hand_text({sound = 'button', volume = 0.7, pitch = 1.1, delay = 0}, {mult = 0, chips = 0, handname = '', level = ''})
