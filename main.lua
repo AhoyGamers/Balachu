@@ -1132,6 +1132,59 @@ SMODS.Joker{
     end,
 }
 
+--Gabe Prower--
+SMODS.Joker{
+    key = 'GabePrower', --How the code refers to the joker
+    loc_txt = { -- local text
+        name = 'Gabe Prower',
+        text = {
+            'Levels up the final played',
+            '{C:attention}Poker Hand{} of the round'
+        },
+    },
+    atlas = 'Jokers', --atlas' key
+    soul_pos = {x=4, y=3},
+    rarity = 3, --rarity: 1 = Common, 2 = Uncommon, 3 = Rare, 4 = Legendary
+    cost = 6, --cost
+    unlocked = true, --where it is unlocked or not: if true, 
+    discovered = true, --whether or not it starts discovered
+    blueprint_compat = true, --can it be blueprinted/brainstormed/other 
+    eternal_compat = true, --can it be eternal
+    perishable_compat = true, --can it be perishable
+    pos = {x = 3, y = 3}, --position in joker spritesheet, starts at 0, scales by the atlas' card size (px and py): {x = 1, y = 0} would mean the sprite is 71 pixels to the right
+    config = { 
+        extra = {
+            final_poker_hand = 'UNSET'
+        }
+    },
+    --local variables unique to this joker
+    --Recalculated when description shown
+    loc_vars = function(self,info_queue,center) --center refers to the "config" variable 
+        return {}  --returns an array of variables to the description
+    end,
+    --Calculate function performed during score calculatio. This is where the effects should be triggered!
+    calculate = function(self,card,context)
+
+        --save the played hand after scoring
+        if context.joker_main then
+            card.ability.extra.final_poker_hand = context.scoring_name
+        end
+
+        --end of round effects
+        if context.end_of_round and context.cardarea == G.jokers then
+            update_hand_text({sound = 'button', volume = 0.7, pitch = 0.8, delay = 0.3}, {handname=localize(card.ability.extra.final_poker_hand, 'poker_hands'),chips = G.GAME.hands[card.ability.extra.final_poker_hand].chips, mult = G.GAME.hands[card.ability.extra.final_poker_hand].mult, level=G.GAME.hands[card.ability.extra.final_poker_hand].level})
+            level_up_hand(nil, card.ability.extra.final_poker_hand, nil, 1)
+            update_hand_text({sound = 'button', volume = 0.7, pitch = 1.1, delay = 0}, {mult = 0, chips = 0, handname = '', level = ''})
+        end
+
+
+    end,
+    in_pool = function(self,wawa,wawa2)
+        --whether or not this card is in the pool, return true if it is, return false if its not
+        return true
+    end,
+}
+
 --Generic functions not tied to any specific card--
 
 --returns how many 2's are in the player's deck
