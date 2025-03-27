@@ -1041,10 +1041,10 @@ SMODS.Joker{
     atlas = 'Jokers', --atlas' key
     soul_pos = {x=1, y=3},
     rarity = 3, --rarity: 1 = Common, 2 = Uncommon, 3 = Rare, 4 = Legendary
-    cost = 5, --cost
+    cost = 6, --cost
     unlocked = true, --where it is unlocked or not: if true, 
     discovered = true, --whether or not it starts discovered
-    blueprint_compat = false, --can it be blueprinted/brainstormed/other 
+    blueprint_compat = true, --can it be blueprinted/brainstormed/other 
     eternal_compat = true, --can it be eternal
     perishable_compat = true, --can it be perishable
     pos = {x = 0, y = 3}, --position in joker spritesheet, starts at 0, scales by the atlas' card size (px and py): {x = 1, y = 0} would mean the sprite is 71 pixels to the right
@@ -1084,7 +1084,53 @@ SMODS.Joker{
     end,
 }
 
+--Wings of time--
+SMODS.Joker{
+    key = 'WingsOfTime', --How the code refers to the joker
+    loc_txt = { -- local text
+        name = 'Wings of Time',
+        text = {
+            'For every {C:attention}Joker{} sold',
+            'Go back one {C:attention}Ante{}',
+            '{C:inactive}(Does not include this joker){}'
+        },
+    },
+    atlas = 'Jokers', --atlas' key
+    rarity = 2, --rarity: 1 = Common, 2 = Uncommon, 3 = Rare, 4 = Legendary
+    cost = 5, --cost
+    unlocked = true, --where it is unlocked or not: if true, 
+    discovered = true, --whether or not it starts discovered
+    blueprint_compat = false, --can it be blueprinted/brainstormed/other 
+    eternal_compat = false, --can it be eternal
+    perishable_compat = true, --can it be perishable
+    pos = {x = 2, y = 3}, --position in joker spritesheet, starts at 0, scales by the atlas' card size (px and py): {x = 1, y = 0} would mean the sprite is 71 pixels to the right
+    config = { 
+        extra = {
 
+        }
+    },
+    --local variables unique to this joker
+    --Recalculated when description shown
+    loc_vars = function(self,info_queue,center) --center refers to the "config" variable 
+        return {}  --returns an array of variables to the description
+    end,
+    --Calculate function performed during score calculatio. This is where the effects should be triggered!
+    calculate = function(self,card,context)
+
+        if context.selling_card and context.card.ability.set == "Joker" then
+            if context.card.ability.name ~= 'j_xmpl_WingsOfTime' then
+                ease_ante(-1)
+                G.GAME.round_resets.blind_ante = G.GAME.round_resets.blind_ante-1
+            end
+        end
+
+
+    end,
+    in_pool = function(self,wawa,wawa2)
+        --whether or not this card is in the pool, return true if it is, return false if its not
+        return true
+    end,
+}
 
 --Generic functions not tied to any specific card--
 
