@@ -14,6 +14,17 @@ SMODS.Atlas{
     py = 95 -- height of one card
 }
 
+--Animated atlas for leorb--
+--Needs to be custom so the X and Y can be changed.
+--Note the x and are are the just the x and y of the spritesheet, divided by the number of items, divided by 2
+--IE. PX = (<Length of spritesheet in pixels> divided by <Number of leoOrb sprites per row>) divided by 2
+SMODS.Atlas{
+    key = 'LeOrb', --atlas key 
+    path = 'leOrb_sprites.png', --atlas' path in (yourMod)/assets/1x or (yourMod)/assets/2x
+    px = 95, --width of one card
+    py = 127-- height of one card
+}
+
 --Rai Tuah--
 SMODS.Joker{
     key = 'RaiTwoah', --How the code refers to the joker
@@ -1229,6 +1240,50 @@ SMODS.Joker{
     end,
 }
 
+--LeOrb--
+SMODS.Joker{
+    key = 'LeOrb', --How the code refers to the joker
+    loc_txt = { -- local text
+        name = 'LeOrb',
+        text = {
+            'Bonus cards now give {X:blue,C:white} X2.0 {} Chips'
+        },
+    },
+    atlas = 'LeOrb', --atlas' key
+    rarity = 3, --rarity: 1 = Common, 2 = Uncommon, 3 = Rare, 4 = Legendary
+    cost = 6, --cost
+    unlocked = true, --where it is unlocked or not: if true, 
+    discovered = true, --whether or not it starts discovered
+    blueprint_compat = true, --can it be blueprinted/brainstormed/other 
+    eternal_compat = true, --can it be eternal
+    perishable_compat = true, --can it be perishable
+    pos = {x = 0, y = 0}, --position in joker spritesheet, starts at 0, scales by the atlas' card size (px and py): {x = 1, y = 0} would mean the sprite is 71 pixels to the right
+    config = { 
+        extra = {
+            tag_added = false
+        }
+    },
+    --local variables unique to this joker
+    --Recalculated when description shown
+    loc_vars = function(self,info_queue,center) --center refers to the "config" variable 
+        return {}  --returns an array of variables to the description
+    end,
+    --Calculate function performed during score calculatio. This is where the effects should be triggered!
+    calculate = function(self,card,context)
+
+        if context.skip_blind then 
+            return {
+                message = tostring(G.P_CENTERS.j_xmpl_LeOrb)
+            }
+        end
+
+    end,
+    in_pool = function(self,wawa,wawa2)
+        --whether or not this card is in the pool, return true if it is, return false if its not
+        return true
+    end,
+}
+
 --Generic functions not tied to any specific card--
 
 --returns how many 2's are in the player's deck
@@ -1282,6 +1337,29 @@ end
             G.GAME.current_round.castle2_card.suit = castle_card.base.suit
         end
     end
+
+---LeOrb animation ----
+--Forcibly updates the leOrb animation
+--If the actual animation is showing extra fraames (or the frames are off)
+--Then go exit the card size in the leOrb Atlas. (That's why leorb has his own atlas)
+local upd = Game.update
+leOrb_dt = 0
+function Game:update(dt)
+  upd(self,dt)
+  leOrb_dt = leOrb_dt + dt
+  if G.P_CENTERS and G.P_CENTERS.j_xmpl_LeOrb and leOrb_dt > 0.1 then
+    leOrb_dt = 0
+    local obj = G.P_CENTERS.j_xmpl_LeOrb
+    if (obj.pos.x == 5 and obj.pos.y == 3) then --Remember rows by columns, and subtract by one because lua is dumb
+      obj.pos.x = 0
+      obj.pos.y = 0
+    elseif (obj.pos.x < 5) then obj.pos.x = obj.pos.x + 1
+    elseif (obj.pos.y < 3) then
+      obj.pos.x = 0
+      obj.pos.y = obj.pos.y + 1
+      end
+    end
+  end
 
 ----------------------------------------------
 ------------MOD CODE END----------------------
