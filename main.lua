@@ -1202,7 +1202,8 @@ SMODS.Joker{
     loc_txt = { -- local text
         name = 'Milanor',
         text = {
-            'Every {C:attention}Tag{} is doubled'
+            'Adds another copy of the latest',
+            '{C:attention}Tag{} when a blind is skipped'
         },
     },
     atlas = 'Jokers', --atlas' key
@@ -1229,9 +1230,9 @@ SMODS.Joker{
     --Calculate function performed during score calculatio. This is where the effects should be triggered!
     calculate = function(self,card,context)
 
-        if G.CONTROLLER.locks.skip_blind then 
+        if context.skip_blind then 
             --G.GAME.tags[1].name
-            add_tag(Tag(G.GAME.tags[1].key))
+            add_tag(Tag(G.GAME.tags[#G.GAME.tags].key))
             --add_tag(Tag('tag_double'))
 
         end
@@ -1302,7 +1303,7 @@ SMODS.Joker{
         },
     },
     atlas = 'Jokers', --atlas' key
-    soul_pos = {x=1, y=4},
+    soul_pos = {x=2, y=4},
     rarity = 2, --rarity: 1 = Common, 2 = Uncommon, 3 = Rare, 4 = Legendary
     cost = 6, --cost
     unlocked = true, --where it is unlocked or not: if true, 
@@ -1310,7 +1311,7 @@ SMODS.Joker{
     blueprint_compat = true, --can it be blueprinted/brainstormed/other 
     eternal_compat = true, --can it be eternal
     perishable_compat = true, --can it be perishable
-    pos = {x = 2, y = 4}, --position in joker spritesheet, starts at 0, scales by the atlas' card size (px and py): {x = 1, y = 0} would mean the sprite is 71 pixels to the right
+    pos = {x = 1, y = 4}, --position in joker spritesheet, starts at 0, scales by the atlas' card size (px and py): {x = 1, y = 0} would mean the sprite is 71 pixels to the right
     config = { 
         extra = {
             final_poker_hand = 'UNSET'
@@ -1337,6 +1338,59 @@ SMODS.Joker{
             update_hand_text({sound = 'button', volume = 0.7, pitch = 1.1, delay = 0}, {mult = 0, chips = 0, handname = '', level = ''})
         end
 
+
+    end,
+    in_pool = function(self,wawa,wawa2)
+        --whether or not this card is in the pool, return true if it is, return false if its not
+        return true
+    end,
+}
+
+--Pocat--
+SMODS.Joker{
+    key = 'Pocat', --How the code refers to the joker
+    loc_txt = { -- local text
+        name = 'Pocat',
+        text = {
+            'Creates a {C:attention}Ramen Joker{}',
+            'in your {C:attention}Consumables{} when',
+            'a {C:attention}Boss Blind{} is defeated',
+            '{C:inactive}Must have room{}'
+        },
+    },
+    atlas = 'Jokers', --atlas' key
+    soul_pos = {x=4, y=4},
+    rarity = 3, --rarity: 1 = Common, 2 = Uncommon, 3 = Rare, 4 = Legendary
+    cost = 6, --cost
+    unlocked = true, --where it is unlocked or not: if true, 
+    discovered = true, --whether or not it starts discovered
+    blueprint_compat = true, --can it be blueprinted/brainstormed/other 
+    eternal_compat = true, --can it be eternal
+    perishable_compat = true, --can it be perishable
+    pos = {x = 3, y = 4}, --position in joker spritesheet, starts at 0, scales by the atlas' card size (px and py): {x = 1, y = 0} would mean the sprite is 71 pixels to the right
+    config = { 
+    },
+    --local variables unique to this joker
+    --Recalculated when description shown
+    loc_vars = function(self,info_queue,center) --center refers to the "config" variable 
+        return {}  --returns an array of variables to the description
+    end,
+    --Calculate function performed during score calculatio. This is where the effects should be triggered!
+    calculate = function(self,card,context)
+
+        if context.end_of_round and context.cardarea == G.jokers and not context.retrigger_joker and G.GAME.blind.boss then
+            G.GAME.consumeable_buffer = G.GAME.consumeable_buffer + 1
+            G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.4, func = function()
+                if G.consumeables.config.card_limit > #G.consumeables.cards then
+                    card:juice_up()
+                                                --type, where to place, ?, ? ,? ,?,      Key (custom ones start with j_xmple_<key>), source
+                    local newcard = create_card('Joker',G.consumeables, nil, nil, nil, nil, 'j_ramen', 'car')
+					newcard:add_to_deck()
+					G.consumeables:emplace(newcard)
+					G.GAME.consumeable_buffer = 0
+                end
+                return true end }))
+        end
 
     end,
     in_pool = function(self,wawa,wawa2)
