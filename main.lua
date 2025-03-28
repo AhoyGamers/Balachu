@@ -44,7 +44,7 @@ SMODS.Joker{
     blueprint_compat = true, --can it be blueprinted/brainstormed/other
     eternal_compat = true, --can it be eternal
     perishable_compat = false, --can it be perishable
-    pos = {x = 0, y = 0}, --position in joker spritesheet, starts at 0, scales by the atlas' card size (px and py): {x = 1, y = 0} would mean the sprite is 71 pixels to the right
+    pos = {x = 0, y = 0}, --Reminder
     config = { 
       extra = {
         mult = 0, --How much mult will be added after calulation
@@ -1246,7 +1246,9 @@ SMODS.Joker{
     loc_txt = { -- local text
         name = 'LeOrb',
         text = {
-            'Bonus cards now give {X:blue,C:white} X2.0 {} Chips'
+            'Bonus cards give',
+             '{X:blue,C:white}X2.0{} Chips',
+            'when scored'
         },
     },
     atlas = 'LeOrb', --atlas' key
@@ -1257,7 +1259,7 @@ SMODS.Joker{
     blueprint_compat = true, --can it be blueprinted/brainstormed/other 
     eternal_compat = true, --can it be eternal
     perishable_compat = true, --can it be perishable
-    pos = {x = 0, y = 0}, --position in joker spritesheet, starts at 0, scales by the atlas' card size (px and py): {x = 1, y = 0} would mean the sprite is 71 pixels to the right
+    pos = {x = 0, y = 0}, --reminder this is in its own atlas with all the sprites
     config = { 
         extra = {
             tag_added = false
@@ -1271,10 +1273,13 @@ SMODS.Joker{
     --Calculate function performed during score calculatio. This is where the effects should be triggered!
     calculate = function(self,card,context)
 
-        if context.skip_blind then 
-            return {
-                message = tostring(G.P_CENTERS.j_xmpl_LeOrb)
-            }
+        if context.individual and context.cardarea == G.play then
+            if SMODS.has_enhancement(context.other_card, "m_bonus") then
+                return {
+                    message = "X2",
+                    xchips = 2
+                }
+            end
         end
 
     end,
@@ -1349,7 +1354,7 @@ function Game:update(dt)
   leOrb_dt = leOrb_dt + dt
   if G.P_CENTERS and G.P_CENTERS.j_xmpl_LeOrb and leOrb_dt > 0.1 then
     leOrb_dt = 0
-    local obj = G.P_CENTERS.j_xmpl_LeOrb
+    local obj = G.P_CENTERS.j_xmpl_LeOrb --j_xmple_<key> is what the atlas defaults to. IDK how to get rid of j_xmple
     if (obj.pos.x == 5 and obj.pos.y == 3) then --Remember rows by columns, and subtract by one because lua is dumb
       obj.pos.x = 0
       obj.pos.y = 0
