@@ -2316,6 +2316,12 @@ return {
                     "{E:1}Pokatofry"
                 },
             },
+            guestartist4 = {
+                name = "Artist",
+                text = {
+                    "{E:1}LeOtter"
+                },
+            },
         },
         Planet={
             c_ceres={

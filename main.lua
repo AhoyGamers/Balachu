@@ -568,7 +568,7 @@ SMODS.Joker{
     --local variables unique to this joker
     --Recalculated when description shown
     loc_vars = function(self,info_queue,center) --center refers to the "config" variable 
-        
+        info_queue[#info_queue+1] = {key = "guestartist2", set = "Other"} --In the en-us lua file, checks the "other" array for the variable titled whatever the key is
         return {vars = {G.GAME.current_round.hands_left*50}} --returns an array of variables to the description
     end,
     --Calculate function performed during score calculatio. This is where the effects should be triggered!
@@ -1149,20 +1149,168 @@ SMODS.Joker{
     loc_txt = { -- local text
         name = 'Gabe Prower',
         text = {
-            'Levels up the final played',
-            '{C:attention}Poker Hand{} of the round'
+            'Creates a Fool {C:attention}Tarot Card{}',
+            'whenever a {C:attention}Arcana Pack{} is opened',
+            '{C:inactive}Must have room{}'
         },
     },
     atlas = 'Jokers', --atlas' key
     soul_pos = {x=4, y=3},
-    rarity = 3, --rarity: 1 = Common, 2 = Uncommon, 3 = Rare, 4 = Legendary
-    cost = 6, --cost
+    rarity = 2, --rarity: 1 = Common, 2 = Uncommon, 3 = Rare, 4 = Legendary
+    cost = 5, --cost
     unlocked = true, --where it is unlocked or not: if true, 
     discovered = true, --whether or not it starts discovered
     blueprint_compat = true, --can it be blueprinted/brainstormed/other 
     eternal_compat = true, --can it be eternal
     perishable_compat = true, --can it be perishable
     pos = {x = 3, y = 3}, --position in joker spritesheet, starts at 0, scales by the atlas' card size (px and py): {x = 1, y = 0} would mean the sprite is 71 pixels to the right
+    config = { 
+    },
+    --local variables unique to this joker
+    --Recalculated when description shown
+    loc_vars = function(self,info_queue,center) --center refers to the "config" variable 
+        info_queue[#info_queue + 1] = G.P_CENTERS.c_fool
+        return {}  --returns an array of variables to the description
+    end,
+    --Calculate function performed during score calculatio. This is where the effects should be triggered!
+    calculate = function(self,card,context)
+
+        --save the played hand after scoring
+        if context.open_booster and context.card.ability.name:find('Arcana') then
+            G.GAME.consumeable_buffer = G.GAME.consumeable_buffer + 1
+            G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.4, func = function()
+                if G.consumeables.config.card_limit > #G.consumeables.cards then
+                    card:juice_up()
+                    local newcard = create_card('Tarot',G.consumeables, nil, nil, nil, nil, 'c_fool', 'car')
+					newcard:add_to_deck()
+					G.consumeables:emplace(newcard)
+					G.GAME.consumeable_buffer = 0
+                end
+                return true end }))
+        end
+
+    end,
+    in_pool = function(self,wawa,wawa2)
+        --whether or not this card is in the pool, return true if it is, return false if its not
+        return true
+    end,
+}
+
+--Milanor--
+SMODS.Joker{
+    key = 'Milanor', --How the code refers to the joker
+    loc_txt = { -- local text
+        name = 'Milanor',
+        text = {
+            'Every {C:attention}Tag{} is doubled'
+        },
+    },
+    atlas = 'Jokers', --atlas' key
+    soul_pos = {x=0, y=4},
+    rarity = 1, --rarity: 1 = Common, 2 = Uncommon, 3 = Rare, 4 = Legendary
+    cost = 5, --cost
+    unlocked = true, --where it is unlocked or not: if true, 
+    discovered = true, --whether or not it starts discovered
+    blueprint_compat = true, --can it be blueprinted/brainstormed/other 
+    eternal_compat = true, --can it be eternal
+    perishable_compat = true, --can it be perishable
+    pos = {x = 5, y = 3}, --position in joker spritesheet, starts at 0, scales by the atlas' card size (px and py): {x = 1, y = 0} would mean the sprite is 71 pixels to the right
+    config = { 
+        extra = {
+            tag_added = false
+        }
+    },
+    --local variables unique to this joker
+    --Recalculated when description shown
+    loc_vars = function(self,info_queue,center) --center refers to the "config" variable 
+        info_queue[#info_queue+1] = {key = "guestartist4", set = "Other"}
+        return {}  --returns an array of variables to the description
+    end,
+    --Calculate function performed during score calculatio. This is where the effects should be triggered!
+    calculate = function(self,card,context)
+
+        if G.CONTROLLER.locks.skip_blind then 
+            --G.GAME.tags[1].name
+            add_tag(Tag(G.GAME.tags[1].key))
+            --add_tag(Tag('tag_double'))
+
+        end
+
+    end,
+    in_pool = function(self,wawa,wawa2)
+        --whether or not this card is in the pool, return true if it is, return false if its not
+        return true
+    end,
+}
+
+--LeOrb--
+SMODS.Joker{
+    key = 'LeOrb', --How the code refers to the joker
+    loc_txt = { -- local text
+        name = 'LeOrb',
+        text = {
+            'Bonus cards give',
+             '{X:blue,C:white}X2.0{} Chips',
+            'when scored'
+        },
+    },
+    atlas = 'LeOrb', --atlas' key
+    rarity = 1, --rarity: 1 = Common, 2 = Uncommon, 3 = Rare, 4 = Legendary
+    cost = 6, --cost
+    unlocked = true, --where it is unlocked or not: if true, 
+    discovered = true, --whether or not it starts discovered
+    blueprint_compat = true, --can it be blueprinted/brainstormed/other 
+    eternal_compat = true, --can it be eternal
+    perishable_compat = true, --can it be perishable
+    pos = {x = 0, y = 0}, --reminder this is in its own atlas with all the sprites
+    config = { 
+        extra = {
+            tag_added = false
+        }
+    },
+    --local variables unique to this joker
+    --Recalculated when description shown
+    loc_vars = function(self,info_queue,center) --center refers to the "config" variable 
+        return {}  --returns an array of variables to the description
+    end,
+    --Calculate function performed during score calculatio. This is where the effects should be triggered!
+    calculate = function(self,card,context)
+
+        if context.individual and context.cardarea == G.play then
+            if SMODS.has_enhancement(context.other_card, "m_bonus") then
+                return {
+                    xchips = 2
+                }
+            end
+        end
+
+    end,
+    in_pool = function(self,wawa,wawa2)
+        --whether or not this card is in the pool, return true if it is, return false if its not
+        return true
+    end,
+}
+
+--Toshabi--
+SMODS.Joker{
+    key = 'Toshabi', --How the code refers to the joker
+    loc_txt = { -- local text
+        name = 'Toshabi',
+        text = {
+            'Levels up the final played',
+            '{C:attention}Poker Hand{} of the round'
+        },
+    },
+    atlas = 'Jokers', --atlas' key
+    soul_pos = {x=1, y=4},
+    rarity = 2, --rarity: 1 = Common, 2 = Uncommon, 3 = Rare, 4 = Legendary
+    cost = 6, --cost
+    unlocked = true, --where it is unlocked or not: if true, 
+    discovered = true, --whether or not it starts discovered
+    blueprint_compat = true, --can it be blueprinted/brainstormed/other 
+    eternal_compat = true, --can it be eternal
+    perishable_compat = true, --can it be perishable
+    pos = {x = 2, y = 4}, --position in joker spritesheet, starts at 0, scales by the atlas' card size (px and py): {x = 1, y = 0} would mean the sprite is 71 pixels to the right
     config = { 
         extra = {
             final_poker_hand = 'UNSET'
@@ -1189,98 +1337,6 @@ SMODS.Joker{
             update_hand_text({sound = 'button', volume = 0.7, pitch = 1.1, delay = 0}, {mult = 0, chips = 0, handname = '', level = ''})
         end
 
-
-    end,
-    in_pool = function(self,wawa,wawa2)
-        --whether or not this card is in the pool, return true if it is, return false if its not
-        return true
-    end,
-}
-
---Milanor--
-SMODS.Joker{
-    key = 'Milanor', --How the code refers to the joker
-    loc_txt = { -- local text
-        name = 'Milanor',
-        text = {
-            'Adds a {C:attention}Double Tag{} after skipping a blind'
-        },
-    },
-    atlas = 'Jokers', --atlas' key
-    soul_pos = {x=0, y=4},
-    rarity = 3, --rarity: 1 = Common, 2 = Uncommon, 3 = Rare, 4 = Legendary
-    cost = 5, --cost
-    unlocked = true, --where it is unlocked or not: if true, 
-    discovered = true, --whether or not it starts discovered
-    blueprint_compat = true, --can it be blueprinted/brainstormed/other 
-    eternal_compat = true, --can it be eternal
-    perishable_compat = true, --can it be perishable
-    pos = {x = 5, y = 3}, --position in joker spritesheet, starts at 0, scales by the atlas' card size (px and py): {x = 1, y = 0} would mean the sprite is 71 pixels to the right
-    config = { 
-        extra = {
-            tag_added = false
-        }
-    },
-    --local variables unique to this joker
-    --Recalculated when description shown
-    loc_vars = function(self,info_queue,center) --center refers to the "config" variable 
-        return {}  --returns an array of variables to the description
-    end,
-    --Calculate function performed during score calculatio. This is where the effects should be triggered!
-    calculate = function(self,card,context)
-
-        if context.skip_blind then 
-            add_tag(Tag('tag_double'))
-        end
-
-    end,
-    in_pool = function(self,wawa,wawa2)
-        --whether or not this card is in the pool, return true if it is, return false if its not
-        return true
-    end,
-}
-
---LeOrb--
-SMODS.Joker{
-    key = 'LeOrb', --How the code refers to the joker
-    loc_txt = { -- local text
-        name = 'LeOrb',
-        text = {
-            'Bonus cards give',
-             '{X:blue,C:white}X2.0{} Chips',
-            'when scored'
-        },
-    },
-    atlas = 'LeOrb', --atlas' key
-    rarity = 3, --rarity: 1 = Common, 2 = Uncommon, 3 = Rare, 4 = Legendary
-    cost = 6, --cost
-    unlocked = true, --where it is unlocked or not: if true, 
-    discovered = true, --whether or not it starts discovered
-    blueprint_compat = true, --can it be blueprinted/brainstormed/other 
-    eternal_compat = true, --can it be eternal
-    perishable_compat = true, --can it be perishable
-    pos = {x = 0, y = 0}, --reminder this is in its own atlas with all the sprites
-    config = { 
-        extra = {
-            tag_added = false
-        }
-    },
-    --local variables unique to this joker
-    --Recalculated when description shown
-    loc_vars = function(self,info_queue,center) --center refers to the "config" variable 
-        return {}  --returns an array of variables to the description
-    end,
-    --Calculate function performed during score calculatio. This is where the effects should be triggered!
-    calculate = function(self,card,context)
-
-        if context.individual and context.cardarea == G.play then
-            if SMODS.has_enhancement(context.other_card, "m_bonus") then
-                return {
-                    message = "X2",
-                    xchips = 2
-                }
-            end
-        end
 
     end,
     in_pool = function(self,wawa,wawa2)
