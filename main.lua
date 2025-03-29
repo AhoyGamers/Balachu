@@ -107,7 +107,7 @@ SMODS.Joker{
         },
     },
     atlas = 'Jokers', --atlas' key
-    rarity = 2, --rarity: 1 = Common, 2 = Uncommon, 3 = Rare, 4 = Legendary
+    rarity = 1, --rarity: 1 = Common, 2 = Uncommon, 3 = Rare, 4 = Legendary
     cost = 4, --cost
     unlocked = true, --where it is unlocked or not: if true, 
     discovered = true, --whether or not it starts discovered
