@@ -1320,6 +1320,7 @@ SMODS.Joker{
     --local variables unique to this joker
     --Recalculated when description shown
     loc_vars = function(self,info_queue,center) --center refers to the "config" variable 
+        info_queue[#info_queue+1] = {key = "guestartist5", set = "Other"}
         return {}  --returns an array of variables to the description
     end,
     --Calculate function performed during score calculatio. This is where the effects should be triggered!
