@@ -2,10 +2,56 @@
 --- MOD_NAME: Balaichu
 --- MOD_ID: Balaichu
 --- MOD_AUTHOR: [TheOtterly]
---- MOD_DESCRIPTION: joker insert test
+--- MOD_DESCRIPTION: Happy birthday raichu!
 --- PREFIX: xmpl
 ----------------------------------------------
 ------------MOD CODE -------------------------
+
+--First add the extra deck options
+
+local atlas_key = 'xmpl_atlas' -- Make sure it uses the mod prefix (here it's xmple but check top) then add '_atlas'
+-- See end of file for notes
+local atlas_path = 'raichuDeck.png' -- Filename for the image in the asset folder
+local atlas_path_hc = 'raichuDeck.png' -- Filename for the high-contrast version of the texture, if existing
+
+local suits = {'hearts', 'clubs', 'diamonds', 'spades'} -- Which suits to replace
+local ranks = {'Jack', 'Queen', "King", "Ace",} -- Which ranks to replace
+--local ranks = {'2', '3', '4', '5', '6', '7', '8', '9', '10', 'Jack', 'Queen', "King", "Ace",} Use this to change ALL cards
+local description = 'Emotes' -- English-language description, also used as default
+
+SMODS.Atlas{  
+    key = atlas_key..'_lc',
+    px = 71,
+    py = 95,
+    path = atlas_path,
+    prefix_config = {key = false}, -- See end of file for notes
+}
+
+if atlas_path_hc then
+    SMODS.Atlas{  
+        key = atlas_key..'_hc',
+        px = 71,
+        py = 95,
+        path = atlas_path_hc,
+        prefix_config = {key = false}, -- See end of file for notes
+    }
+end
+
+for _, suit in ipairs(suits) do
+    SMODS.DeckSkin{
+        key = suit.."_skin",
+        suit = suit:gsub("^%l", string.upper),
+        ranks = ranks,
+        lc_atlas = atlas_key..'_lc',
+        hc_atlas = (atlas_path_hc and atlas_key..'_hc') or atlas_key..'_lc',
+        loc_txt = {
+            ['en-us'] = description
+        },
+        posStyle = 'deck'
+    }
+end
+
+--End of deck changes. Rest are for jokers--
 
 SMODS.Atlas{
     key = 'Jokers', --atlas key 
@@ -1402,6 +1448,7 @@ SMODS.Joker{
 
 --Generic functions not tied to any specific card--
 
+
 --returns how many 2's are in the player's deck
 function getNumOfTwos()
     local tally = 0
@@ -1419,6 +1466,7 @@ function getModifiedJokers()
     end
     return tally
 end
+
 
 --IDK this is some code I copy pasted for raimew
 --Does something to interpret a random card suite from the player's deck and put it in raimew
