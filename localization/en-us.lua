@@ -2321,11 +2321,13 @@ return {
                 text = {
                     "{E:1}LeOtter"
                 },
+            },
             guestartist5 = {
                 name = "Artist",
                 text = {
                    "{E:1}Toshabi"
                 },
+                
             },
         },
         Planet={
@@ -4348,5 +4350,4 @@ return {
             },
         },
     },
-}
 }
