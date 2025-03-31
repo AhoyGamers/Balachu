@@ -1431,6 +1431,7 @@ end
 							
 	This function hooks into Game:init_game_object in order to create the custom
 	G.GAME.current_round.castle2_card variable that the above joker uses whenever a run starts.]]
+    
     local igo = Game.init_game_object
     function Game:init_game_object()
         local ret = igo(self)
@@ -1474,8 +1475,8 @@ function Game:update(dt)
       obj.pos.x = 0
       obj.pos.y = obj.pos.y + 1
       end
-    end
-  end
+   end
+end
 
 ----------------------------------------------
 ------------MOD CODE END----------------------
