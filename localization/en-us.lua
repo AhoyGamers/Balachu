@@ -2592,7 +2592,7 @@ return {
         },
         Stake={
             stake_black={
-                name="Black Stake",
+                name="Orca Stake",
                 text={
                     "Shop can have {C:attention}Eternal{} Jokers",
                     "{C:inactive,s:0.8}(Can't be sold or destroyed)",
@@ -2607,7 +2607,7 @@ return {
                 },
             },
             stake_gold={
-                name="Gold Stake",
+                name="Raichu Stake",
                 text={
                     "Shop can have {C:attention}Rental{} Jokers",
                     "{C:inactive,s:0.8}(Costs {C:money,s:0.8}$3{C:inactive,s:0.8} per round)",
@@ -2623,7 +2623,7 @@ return {
                 },
             },
             stake_orange={
-                name="Orange Stake",
+                name="Pocat Stake",
                 text={
                     "Shop can have {C:attention}Perishable{} Jokers",
                     "{C:inactive,s:0.8}(Debuffed after 5 Rounds)",
@@ -2631,7 +2631,7 @@ return {
                 },
             },
             stake_purple={
-                name="Purple Stake",
+                name="Kato Stake",
                 text={
                     "Required score scales",
                     "faster for each {C:attention}Ante",

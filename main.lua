@@ -51,6 +51,53 @@ for _, suit in ipairs(suits) do
     }
 end
 
+
+--Add custom raichu deck--
+SMODS.Atlas {
+	key = "raiDeck",
+	path = "Raichu_deck.png",
+	px = 71,
+	py = 95,
+}
+
+--  Deck
+SMODS.Back {
+    key = "Raichu_deck",
+    config = {
+        vouchers = {
+            'v_overstock_norm',
+        },
+        unlock_condition = {type = 'win_deck', deck = 'b_green'}
+    },
+    pos = { x = 0, y = 0 },
+	atlas = "raiDeck",
+    loc_txt = {
+        name = "Raichu deck",
+        text = {
+			"Start with {C:attention}Overstock{}",
+            "All balichu cards are common permanently",
+            "(Yeah oops its a bug",
+            "you'll have to restart to fix)"
+        }
+    },
+
+	apply = function()
+        G.E_MANAGER:add_event(Event({
+            func = function()
+                --Whatever you want to change or modify before game starts
+                --Go into every joker and set rarity to common?
+                for key, item in pairs(G.P_CENTERS) do
+                    if item.name and string.find(item.name, "j_xmpl") then
+                        item.rarity = 1
+                        sendDebugMessage("Iterated over "..tostring(item.name), "MyDebugLogger")
+                    end
+                end
+                return true
+            end
+        }))
+    end
+}
+
 --End of deck changes. Rest are for jokers--
 
 SMODS.Atlas{
@@ -1561,6 +1608,7 @@ function Game:update(dt)
       end
    end
 end
+
 
 ----------------------------------------------
 ------------MOD CODE END----------------------
