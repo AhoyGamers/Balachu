@@ -4,7 +4,7 @@ A Balatro mod made for Raichu!
 
 ![Balachu Logo](https://i.imgur.com/z8Jmcsv.png)
 
-**Balaicu** is a Vinesauce-themed expansion for Balatro, made in collaboration with a few members of the Raichu Ravine community! Featuring art from several talented artists, Cardsauce adds 23 new Jokers, one new deck, and a new skin for each suit.
+**Balaichu** is an expansion for Balatro based on twitch streamer TheRaichu made in collaboration with a few members of the Raichu Ravine community. Featuring art from several talented artists, Balaichu adds 23 new Jokers, one new deck, and a new skin for each suit.
 
 ## Installation
 
