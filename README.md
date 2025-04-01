@@ -1,1 +1,20 @@
 # Balachu
+
+A Balatro mod made for Raichu!
+
+![Balaichu Logo]([https://i.imgur.com/aKvF0sg.png](https://imgur.com/a/L24ouKD))
+
+**Balaicu** is a Vinesauce-themed expansion for Balatro, made in collaboration with a few members of the Raichu Ravine community! Featuring art from several talented artists, Cardsauce adds 23 new Jokers, one new deck, and a new skin for each suit.
+
+## Installation
+
+This mod requires [Lovely](https://github.com/ethangreen-dev/lovely-injector) and the latest version of [Steammodded](https://github.com/Steamopollys/Steamodded) Without these dependencies, this mod will not function.
+
+Once you've installed both lovely and Steammodded, download the latest release zip file from the **Releases** tab and put the folder inside it in your Balatro Mods folder (`%APPDATA%/Balatro/Mods`). That's it! 
+
+## Credits
+Created by **The Otterly**
+
+Detailed credits for everyone else who contributed to the mod can be found in-game in Cardsauce's credits tab in the Mods menu. 
+
+ A huge thank you to Raichu for the wonderful community memes. Here's to another year!
