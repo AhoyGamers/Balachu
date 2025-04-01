@@ -71,6 +71,18 @@ SMODS.Atlas{
     py = 127-- height of one card
 }
 
+--Animated atlas for leorb--
+--Needs to be custom so the X and Y can be changed.
+--Note the x and are are the just the x and y of the spritesheet, divided by the number of items, divided by 2
+--IE. PX = (<Length of spritesheet in pixels> divided by <Number of leoOrb sprites per row>) divided by 2
+SMODS.Atlas{
+    key = 'Maple', --atlas key 
+    path = 'MapleFrames.png', --atlas' path in (yourMod)/assets/1x or (yourMod)/assets/2x
+    px = 71, --width of one card
+    py = 95-- height of one card
+}
+
+
 --Rai Tuah--
 SMODS.Joker{
     key = 'RaiTwoah', --How the code refers to the joker
@@ -298,7 +310,7 @@ SMODS.Joker{
          '{C:gray}(Currently{} {C:mult}+#1#{} {C:gray}Mult){}'
         },
     },
-    atlas = 'Jokers', --atlas' key
+    atlas = 'Maple', --atlas' key
     rarity = 1, --rarity: 1 = Common, 2 = Uncommon, 3 = Rare, 4 = Legendary
     cost = 5, --cost
     unlocked = true, --where it is unlocked or not: if true, 
@@ -310,7 +322,8 @@ SMODS.Joker{
     config = { 
       extra = {
         mult = 0,
-        played_hand_type = 'UNSET'
+        played_hand_type = 'UNSET',
+        cur_frame = 0
       }
     },
     --local variables unique to this joker
@@ -325,13 +338,22 @@ SMODS.Joker{
         if context.cardarea == G.jokers and context.before then
             --If unset, allow +1 regardless to player can start
             if card.ability.extra.played_hand_type == 'UNSET' then
+                local obj = G.P_CENTERS.j_xmpl_GetThoseEarsOut
+                card.ability.extra.cur_frame = 0
+                obj.pos.x = card.ability.extra.cur_frame
                 card.ability.extra.mult = card.ability.extra.mult + 1
                 card.ability.extra.played_hand_type = context.scoring_name
             elseif card.ability.extra.played_hand_type == context.scoring_name then --If set, check if the type matches
                 card.ability.extra.mult = card.ability.extra.mult + 1
+
+                if card.ability.extra.mult % 3 == 0 then --Only increase the frame every 3 mult
+                    card.ability.extra.cur_frame = card.ability.extra.cur_frame+1
+                end
+                
             else --Player breaks consecutiveness
                 card.ability.extra.mult = 0
                 card.ability.extra.played_hand_type = context.scoring_name
+                card.ability.extra.cur_frame = 0
                 return {
                     message = 'RESET'
                 }
@@ -340,10 +362,24 @@ SMODS.Joker{
 
         --Apply mult
         if context.joker_main then 
+            if card.ability.extra.played_hand_type == 'UNSET' then
+                local obj = G.P_CENTERS.j_xmpl_GetThoseEarsOut 
+                obj.pos.x = 0
+            end
 			return {
                 mult = card.ability.extra.mult
 			}
         end
+
+
+        --update animation
+        if G.P_CENTERS and G.P_CENTERS.j_xmpl_GetThoseEarsOut then
+            local obj = G.P_CENTERS.j_xmpl_GetThoseEarsOut --j_xmple_<key> is what the atlas defaults to. IDK how to get rid of j_xmple
+            if (card.ability.extra.cur_frame < 5) then --Remember rows by columns, and subtract by one because lua is dumb
+              obj.pos.x = card.ability.extra.cur_frame
+            end
+        end
+  
 
     end,
     in_pool = function(self,wawa,wawa2)
