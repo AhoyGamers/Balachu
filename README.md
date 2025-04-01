@@ -10,7 +10,7 @@ A Balatro mod made for Raichu!
 
 This mod requires [Lovely](https://github.com/ethangreen-dev/lovely-injector) and the latest version of [Steammodded](https://github.com/Steamopollys/Steamodded) Without these dependencies, this mod will not function.
 
-Once you've installed both lovely and Steammodded, download the latest release zip file from the **Releases** tab and put the folder inside it in your Balatro Mods folder (`%APPDATA%/Balatro/Mods`). That's it! 
+Once you've installed both lovely and Steammodded, download the [latest release](https://github.com/AhoyGamers/Balachu/releases/tag/Releases) zip file from the **Releases** tab and put the folder inside it in your Balatro Mods folder (`%APPDATA%/Balatro/Mods`). That's it! 
 
 ## Credits
 Created by **The Otterly**
