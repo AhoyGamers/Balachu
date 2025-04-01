@@ -18,8 +18,8 @@ Created by **The Otterly**
 With card art generously donated from:
 * Aaron_Growlithe
 * Lavastan
-* PokatoFry
 * LeOtter
+* PokatoFry
 
 More detailed credits per-card are available from the in-game collection menu.
 
