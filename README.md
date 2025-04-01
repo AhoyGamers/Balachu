@@ -15,6 +15,13 @@ Once you've installed both lovely and Steammodded, download the latest release z
 ## Credits
 Created by **The Otterly**
 
-Detailed credits for everyone else who contributed to the mod can be found in-game in Cardsauce's credits tab in the Mods menu. 
+With card art generously donated from:
+* Aaron_Growlithe
+* Lavastan
+* PokatoFry
+* LeOtter
+
+More detailed credits per-card are available from the in-game collection menu.
+
 
  A huge thank you to Raichu for the wonderful community memes. Here's to another year!
