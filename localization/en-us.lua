@@ -2647,7 +2647,7 @@ return {
                 },
             },
             stake_white={
-                name="White Stake",
+                name="Toshabi Stake",
                 text={
                     "Base Difficulty",
                 },

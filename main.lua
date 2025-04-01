@@ -63,11 +63,11 @@ SMODS.Atlas {
 --  Deck
 SMODS.Back {
     key = "Raichu_deck",
+    unlocked = true,
     config = {
         vouchers = {
             'v_overstock_norm',
-        },
-        unlock_condition = {type = 'win_deck', deck = 'b_green'}
+        }
     },
     pos = { x = 0, y = 0 },
 	atlas = "raiDeck",
@@ -75,8 +75,9 @@ SMODS.Back {
         name = "Raichu deck",
         text = {
 			"Start with {C:attention}Overstock{}",
-            "All balichu cards are common permanently",
-            "(Yeah oops its a bug",
+            "All Balaichu cards are",
+            "common permanently",
+            "(It's a bug",
             "you'll have to restart to fix)"
         }
     },
@@ -89,7 +90,7 @@ SMODS.Back {
                 for key, item in pairs(G.P_CENTERS) do
                     if item.name and string.find(item.name, "j_xmpl") then
                         item.rarity = 1
-                        sendDebugMessage("Iterated over "..tostring(item.name), "MyDebugLogger")
+                        --sendDebugMessage("Iterated over "..tostring(item.name), "MyDebugLogger")
                     end
                 end
                 return true
@@ -145,7 +146,7 @@ SMODS.Joker{
     rarity = 1, --rarity: 1 = Common, 2 = Uncommon, 3 = Rare, 4 = Legendary
     cost = 4, --cost
     unlocked = true, --where it is unlocked or not: if true, 
-    discovered = true, --whether or not it starts discovered
+    discovered = false, --whether or not it starts discovered
     blueprint_compat = true, --can it be blueprinted/brainstormed/other
     eternal_compat = true, --can it be eternal
     perishable_compat = false, --can it be perishable
@@ -215,7 +216,7 @@ SMODS.Joker{
     rarity = 1, --rarity: 1 = Common, 2 = Uncommon, 3 = Rare, 4 = Legendary
     cost = 4, --cost
     unlocked = true, --where it is unlocked or not: if true, 
-    discovered = true, --whether or not it starts discovered
+    discovered = false, --whether or not it starts discovered
     blueprint_compat = true, --can it be blueprinted/brainstormed/other (should only copy the mult NOT the card destruction!)
     eternal_compat = true, --can it be eternal
     perishable_compat = true, --can it be perishable
@@ -286,7 +287,7 @@ SMODS.Joker{
     rarity = 3, --rarity: 1 = Common, 2 = Uncommon, 3 = Rare, 4 = Legendary
     cost = 7, --cost
     unlocked = true, --where it is unlocked or not: if true, 
-    discovered = true, --whether or not it starts discovered
+    discovered = false, --whether or not it starts discovered
     blueprint_compat = false, --can it be blueprinted/brainstormed/other
     eternal_compat = true, --can it be eternal
     perishable_compat = true, --can it be perishable
@@ -361,7 +362,7 @@ SMODS.Joker{
     rarity = 1, --rarity: 1 = Common, 2 = Uncommon, 3 = Rare, 4 = Legendary
     cost = 5, --cost
     unlocked = true, --where it is unlocked or not: if true, 
-    discovered = true, --whether or not it starts discovered
+    discovered = false, --whether or not it starts discovered
     blueprint_compat = true, --can it be blueprinted/brainstormed/other (should only copy the mult NOT the card destruction!)
     eternal_compat = true, --can it be eternal
     perishable_compat = false, --can it be perishable
@@ -450,7 +451,7 @@ SMODS.Joker{
     rarity = 1, --rarity: 1 = Common, 2 = Uncommon, 3 = Rare, 4 = Legendary
     cost = 5, --cost
     unlocked = true, --where it is unlocked or not: if true, 
-    discovered = true, --whether or not it starts discovered
+    discovered = false, --whether or not it starts discovered
     blueprint_compat = true, --can it be blueprinted/brainstormed/other (should only copy the mult NOT the card destruction!)
     eternal_compat = true, --can it be eternal
     perishable_compat = true, --can it be perishable
@@ -529,7 +530,7 @@ SMODS.Joker{
     rarity = 3, --rarity: 1 = Common, 2 = Uncommon, 3 = Rare, 4 = Legendary
     cost = 8, --cost
     unlocked = true, --where it is unlocked or not: if true, 
-    discovered = true, --whether or not it starts discovered
+    discovered = false, --whether or not it starts discovered
     blueprint_compat = true, --can it be blueprinted/brainstormed/other (should only copy the mult NOT the card destruction!)
     eternal_compat = true, --can it be eternal
     perishable_compat = true, --can it be perishable
@@ -573,7 +574,7 @@ SMODS.Joker{
     rarity = 3, --rarity: 1 = Common, 2 = Uncommon, 3 = Rare, 4 = Legendary
     cost = 8, --cost
     unlocked = true, --where it is unlocked or not: if true, 
-    discovered = true, --whether or not it starts discovered
+    discovered = false, --whether or not it starts discovered
     blueprint_compat = true, --can it be blueprinted/brainstormed/other (should only copy the mult NOT the card destruction!)
     eternal_compat = true, --can it be eternal
     perishable_compat = true, --can it be perishable
@@ -627,7 +628,7 @@ SMODS.Joker{
     rarity = 2, --rarity: 1 = Common, 2 = Uncommon, 3 = Rare, 4 = Legendary
     cost = 7, --cost
     unlocked = true, --where it is unlocked or not: if true, 
-    discovered = true, --whether or not it starts discovered
+    discovered = false, --whether or not it starts discovered
     blueprint_compat = true, --can it be blueprinted/brainstormed/other (should only copy the mult NOT the card destruction!)
     eternal_compat = true, --can it be eternal
     perishable_compat = true, --can it be perishable
@@ -684,7 +685,7 @@ SMODS.Joker{
     rarity = 1, --rarity: 1 = Common, 2 = Uncommon, 3 = Rare, 4 = Legendary
     cost = 7, --cost
     unlocked = true, --where it is unlocked or not: if true, 
-    discovered = true, --whether or not it starts discovered
+    discovered = false, --whether or not it starts discovered
     blueprint_compat = true, --can it be blueprinted/brainstormed/other (should only copy the mult NOT the card destruction!)
     eternal_compat = true, --can it be eternal
     perishable_compat = true, --can it be perishable
@@ -735,7 +736,7 @@ SMODS.Joker{
     rarity = 2, --rarity: 1 = Common, 2 = Uncommon, 3 = Rare, 4 = Legendary
     cost = 6, --cost
     unlocked = true, --where it is unlocked or not: if true, 
-    discovered = true, --whether or not it starts discovered
+    discovered = false, --whether or not it starts discovered
     blueprint_compat = true, --can it be blueprinted/brainstormed/other (should only copy the mult NOT the card destruction!)
     eternal_compat = true, --can it be eternal
     perishable_compat = true, --can it be perishable
@@ -797,7 +798,7 @@ SMODS.Joker{
     rarity = 2, --rarity: 1 = Common, 2 = Uncommon, 3 = Rare, 4 = Legendary
     cost = 5, --cost
     unlocked = true, --where it is unlocked or not: if true, 
-    discovered = true, --whether or not it starts discovered
+    discovered = false, --whether or not it starts discovered
     blueprint_compat = false, --can it be blueprinted/brainstormed/other (should only copy the mult NOT the card destruction!)
     eternal_compat = true, --can it be eternal
     perishable_compat = true, --can it be perishable
@@ -874,7 +875,7 @@ SMODS.Joker{
     rarity = 2, --rarity: 1 = Common, 2 = Uncommon, 3 = Rare, 4 = Legendary
     cost = 5, --cost
     unlocked = true, --where it is unlocked or not: if true, 
-    discovered = true, --whether or not it starts discovered
+    discovered = false, --whether or not it starts discovered
     blueprint_compat = false, --can it be blueprinted/brainstormed/other (should only copy the mult NOT the card destruction!)
     eternal_compat = true, --can it be eternal
     perishable_compat = true, --can it be perishable
@@ -1005,7 +1006,7 @@ SMODS.Joker{
     rarity = 2, --rarity: 1 = Common, 2 = Uncommon, 3 = Rare, 4 = Legendary
     cost = 6, --cost
     unlocked = true, --where it is unlocked or not: if true, 
-    discovered = true, --whether or not it starts discovered
+    discovered = false, --whether or not it starts discovered
     blueprint_compat = true, --can it be blueprinted/brainstormed/other (should only copy the mult NOT the card destruction!)
     eternal_compat = true, --can it be eternal
     perishable_compat = true, --can it be perishable
@@ -1056,7 +1057,7 @@ SMODS.Joker{
     rarity = 2, --rarity: 1 = Common, 2 = Uncommon, 3 = Rare, 4 = Legendary
     cost = 4, --cost
     unlocked = true, --where it is unlocked or not: if true, 
-    discovered = true, --whether or not it starts discovered
+    discovered = false, --whether or not it starts discovered
     blueprint_compat = false, --can it be blueprinted/brainstormed/other (should only copy the mult NOT the card destruction!)
     eternal_compat = true, --can it be eternal
     perishable_compat = true, --can it be perishable
@@ -1119,7 +1120,7 @@ SMODS.Joker{
     rarity = 1, --rarity: 1 = Common, 2 = Uncommon, 3 = Rare, 4 = Legendary
     cost = 6, --cost
     unlocked = true, --where it is unlocked or not: if true, 
-    discovered = true, --whether or not it starts discovered
+    discovered = false, --whether or not it starts discovered
     blueprint_compat = true, --can it be blueprinted/brainstormed/other 
     eternal_compat = true, --can it be eternal
     perishable_compat = true, --can it be perishable
@@ -1183,7 +1184,7 @@ SMODS.Joker{
     rarity = 3, --rarity: 1 = Common, 2 = Uncommon, 3 = Rare, 4 = Legendary
     cost = 6, --cost
     unlocked = true, --where it is unlocked or not: if true, 
-    discovered = true, --whether or not it starts discovered
+    discovered = false, --whether or not it starts discovered
     blueprint_compat = true, --can it be blueprinted/brainstormed/other 
     eternal_compat = true, --can it be eternal
     perishable_compat = true, --can it be perishable
@@ -1239,7 +1240,7 @@ SMODS.Joker{
     rarity = 2, --rarity: 1 = Common, 2 = Uncommon, 3 = Rare, 4 = Legendary
     cost = 5, --cost
     unlocked = true, --where it is unlocked or not: if true, 
-    discovered = true, --whether or not it starts discovered
+    discovered = false, --whether or not it starts discovered
     blueprint_compat = true, --can it be blueprinted/brainstormed/other 
     eternal_compat = false, --can it be eternal
     perishable_compat = true, --can it be perishable
@@ -1288,7 +1289,7 @@ SMODS.Joker{
     rarity = 2, --rarity: 1 = Common, 2 = Uncommon, 3 = Rare, 4 = Legendary
     cost = 5, --cost
     unlocked = true, --where it is unlocked or not: if true, 
-    discovered = true, --whether or not it starts discovered
+    discovered = false, --whether or not it starts discovered
     blueprint_compat = true, --can it be blueprinted/brainstormed/other 
     eternal_compat = true, --can it be eternal
     perishable_compat = true, --can it be perishable
@@ -1340,7 +1341,7 @@ SMODS.Joker{
     rarity = 1, --rarity: 1 = Common, 2 = Uncommon, 3 = Rare, 4 = Legendary
     cost = 5, --cost
     unlocked = true, --where it is unlocked or not: if true, 
-    discovered = true, --whether or not it starts discovered
+    discovered = false, --whether or not it starts discovered
     blueprint_compat = true, --can it be blueprinted/brainstormed/other 
     eternal_compat = true, --can it be eternal
     perishable_compat = true, --can it be perishable
@@ -1388,7 +1389,7 @@ SMODS.Joker{
     rarity = 1, --rarity: 1 = Common, 2 = Uncommon, 3 = Rare, 4 = Legendary
     cost = 6, --cost
     unlocked = true, --where it is unlocked or not: if true, 
-    discovered = true, --whether or not it starts discovered
+    discovered = false, --whether or not it starts discovered
     blueprint_compat = true, --can it be blueprinted/brainstormed/other 
     eternal_compat = true, --can it be eternal
     perishable_compat = true, --can it be perishable
@@ -1436,7 +1437,7 @@ SMODS.Joker{
     rarity = 2, --rarity: 1 = Common, 2 = Uncommon, 3 = Rare, 4 = Legendary
     cost = 6, --cost
     unlocked = true, --where it is unlocked or not: if true, 
-    discovered = true, --whether or not it starts discovered
+    discovered = false, --whether or not it starts discovered
     blueprint_compat = true, --can it be blueprinted/brainstormed/other 
     eternal_compat = true, --can it be eternal
     perishable_compat = true, --can it be perishable
@@ -1493,7 +1494,7 @@ SMODS.Joker{
     rarity = 3, --rarity: 1 = Common, 2 = Uncommon, 3 = Rare, 4 = Legendary
     cost = 6, --cost
     unlocked = true, --where it is unlocked or not: if true, 
-    discovered = true, --whether or not it starts discovered
+    discovered = false, --whether or not it starts discovered
     blueprint_compat = true, --can it be blueprinted/brainstormed/other 
     eternal_compat = true, --can it be eternal
     perishable_compat = true, --can it be perishable
