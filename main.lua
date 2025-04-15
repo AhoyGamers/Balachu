@@ -70,6 +70,8 @@ SMODS.Back {
             'v_overstock_norm',
         }
     },
+    unlocked = false,
+    unlock_condition = {type = 'win_deck', deck = 'b_yellow'},
     pos = { x = 0, y = 0 },
 	atlas = "raiDeck",
     loc_txt = {
@@ -1826,6 +1828,8 @@ local function INIT()
             banned_cards = banned
         }
     })
+
+    
 end
 
 
