@@ -1530,6 +1530,145 @@ SMODS.Joker{
     end,
 }
 
+--Skibidi raichu--
+SMODS.Joker{
+    key = 'Skibidi', --How the code refers to the joker
+    loc_txt = { -- local text
+        name = 'Skibidi Joker',
+        text = {
+            'If the {C:attention}First Hand{} of round',
+            'contains a {C:attention}Flush{} then',
+            'create the {C:attention}Tarot Card{}',
+            'for the suit.'
+        },
+    },
+    atlas = 'Jokers', --atlas' key
+    rarity = 1, --rarity: 1 = Common, 2 = Uncommon, 3 = Rare, 4 = Legendary
+    cost = 4, --cost
+    unlocked = true, --where it is unlocked or not: if true, 
+    discovered = false, --whether or not it starts discovered
+    blueprint_compat = false, --can it be blueprinted/brainstormed/other 
+    eternal_compat = true, --can it be eternal
+    perishable_compat = true, --can it be perishable
+    pos = {x = 0, y = 5}, --position in joker spritesheet, starts at 0, scales by the atlas' card size (px and py): {x = 1, y = 0} would mean the sprite is 71 pixels to the right
+    config = { 
+        extra = {
+            is_first_hand = 1 --Has the first hand been played?
+        }
+    },
+    --local variables unique to this joker
+    --Recalculated when description shown
+    loc_vars = function(self,info_queue,center) --center refers to the "config" variable 
+        return {}  --returns an array of variables to the description
+    end,
+    --Calculate function performed during score calculatio. This is where the effects should be triggered!
+    calculate = function(self,card,context)
+
+        if context.joker_main then
+            if card.ability.extra.is_first_hand == 1 and next(context.poker_hands["Flush"]) then
+                card.ability.extra.is_first_hand = 0
+                local tarot_type = '' --Determines which tarot card should be spawned
+
+                if context.scoring_hand[#context.scoring_hand]:is_suit("Diamonds") then
+                    tarot_type = "c_star"
+                elseif context.scoring_hand[#context.scoring_hand]:is_suit("Clubs") then
+                    tarot_type = "c_moon"
+                elseif context.scoring_hand[#context.scoring_hand]:is_suit("Hearts") then
+                    tarot_type = "c_sun"
+                elseif context.scoring_hand[#context.scoring_hand]:is_suit("Spades") then
+                    tarot_type = "c_world"
+                end
+
+
+                G.GAME.consumeable_buffer = G.GAME.consumeable_buffer + 1
+                G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.4, func = function()
+                if G.consumeables.config.card_limit > #G.consumeables.cards then
+                    card:juice_up()
+                                                --type, where to place, ?, ? ,? ,?,      Key (custom ones start with j_xmple_<key>), source
+                    local newcard = create_card('Tarot',G.consumeables, nil, nil, nil, nil, tarot_type, 'car')
+					newcard:add_to_deck()
+                    play_sound('tarot1')
+					G.consumeables:emplace(newcard)
+					G.GAME.consumeable_buffer = 0
+                end
+                return true end }))
+
+                return {
+                    message = "Skibidi"
+                }
+            end
+            
+        end
+
+        if context.end_of_round then
+            card.ability.extra.is_first_hand = 1
+        end
+
+    end,
+    in_pool = function(self,wawa,wawa2)
+        --whether or not this card is in the pool, return true if it is, return false if its not
+        return true
+    end,
+}
+
+--Hatsune Raichu--
+SMODS.Joker{
+    key = 'HatsuneRaichu', --How the code refers to the joker
+    loc_txt = { -- local text
+        name = 'Hatsune Raichu',
+        text = {
+            'Applies {X:mult,C:white} X1.0 {} Mult for',
+            'each hand size under {C:attention}8{}',
+            '{C:inactive}Currently{} {X:mult,C:white} X#1#{} {C:inactive}Mult{}'
+        },
+    },
+    atlas = 'Jokers', --atlas' key
+    rarity = 1, --rarity: 1 = Common, 2 = Uncommon, 3 = Rare, 4 = Legendary
+    cost = 4, --cost
+    unlocked = true, --where it is unlocked or not: if true, 
+    discovered = false, --whether or not it starts discovered
+    blueprint_compat = false, --can it be blueprinted/brainstormed/other 
+    eternal_compat = true, --can it be eternal
+    perishable_compat = true, --can it be perishable
+    pos = {x = 5, y = 4}, --position in joker spritesheet, starts at 0, scales by the atlas' card size (px and py): {x = 1, y = 0} would mean the sprite is 71 pixels to the right
+    config = { 
+    },
+    --local variables unique to this joker
+    --Recalculated when description shown
+    loc_vars = function(self,info_queue,center) --center refers to the "config" variable 
+        if pcall(getHandsize) then
+            if 9-G.hand.config.card_limit > 0 then
+                return {vars = {9-G.hand.config.card_limit}}
+            end
+            return {vars = {1}}
+        end 
+        --Only triggers if getHandSize returns an error (IE g.hand doesn't exist cause we're in the main menu)
+        return {vars = {1}}  --returns an array of variables to the description
+    end,
+    --Calculate function performed during score calculatio. This is where the effects should be triggered!
+    calculate = function(self,card,context)
+
+        if context.joker_main then
+
+            if 9-G.hand.config.card_limit > 0 then
+                return {
+                    xmult = 9-G.hand.config.card_limit --9 minus instead of 8 minus because otherwise its zero lol
+                }
+            end
+
+            --ensure xmult cant become less than 1 due to turlte bean
+            return {
+                xmult = 1 
+            }
+        end
+
+    end,
+    in_pool = function(self,wawa,wawa2)
+        --whether or not this card is in the pool, return true if it is, return false if its not
+        return true
+    end,
+}
+
 --Generic functions not tied to any specific card--
 
 
@@ -1540,6 +1679,10 @@ function getNumOfTwos()
         if v:get_id() == 2 then tally = tally+1 end
     end
     return tally
+end
+
+function getHandsize()
+    return G.hand.config.card_limit
 end
 
 --Returns how many modified jokers the player has
