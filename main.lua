@@ -7,7 +7,8 @@
 ----------------------------------------------
 ------------MOD CODE -------------------------
 
---First add the extra deck options
+
+--First emoji deck options
 
 local atlas_key = 'xmpl_atlas' -- Make sure it uses the mod prefix (here it's xmple but check top) then add '_atlas'
 -- See end of file for notes
@@ -422,7 +423,7 @@ SMODS.Joker{
 
         --update animation
         if G.P_CENTERS and G.P_CENTERS.j_xmpl_GetThoseEarsOut then
-            local obj = G.P_CENTERS.j_xmpl_GetThoseEarsOut --j_xmple_<key> is what the atlas defaults to. IDK how to get rid of j_xmple
+            local obj = G.P_CENTERS.j_xmpl_GetThoseEarsOut --j_xmple_<key> is what the atlas defaults to. xmple is from the prefix variable allll the way at the beginning of the mod, inside the comments
             if (card.ability.extra.cur_frame < 5) then --Remember rows by columns, and subtract by one because lua is dumb
               obj.pos.x = card.ability.extra.cur_frame
             end
@@ -1754,6 +1755,83 @@ function Game:update(dt)
 end
 
 
+----Custom challgnes
+---Add custom challenges
+local function INIT()
+
+    local banned = {}
+    for k, v in pairs(G.P_CENTERS) do
+        if not banned[k] then
+            if string.find(k, "j_") then
+                if not string.find(k, "j_xmpl_") then
+                    banned[#banned+1] = { id = k }
+                end
+            end
+        end
+    end
+
+    local challenges = G.CHALLENGES
+	G.localization.misc.challenge_names["hungryVorca"] = "The Hungry, Hungry Vorca"
+    G.localization.misc.challenge_names["onlyBalachu"] = "Only Balachu Cards"
+    
+    table.insert(G.CHALLENGES,#G.CHALLENGES+1,{
+        name = "The Hungry, Hungry Vorca",
+        id = 'hungryVorca',
+        rules = {
+            custom = {
+            },
+            modifiers = {
+                {id = 'joker_slots', value = 4},
+            }
+        },
+        jokers = {
+            {id = 'j_xmpl_Vorca', eternal = true},
+        },
+        consumeables = {
+        },
+        vouchers = {
+        },
+        deck = {
+            type = 'Challenge Deck'
+        },
+        restrictions = {
+            banned_cards = {
+            },
+            banned_tags = {
+            },
+            banned_other = {
+            }
+        }
+    })
+
+    table.insert(G.CHALLENGES,#G.CHALLENGES+1,{
+        name = "Only Balachu Cards",
+        id = 'onlyBalachu',
+        rules = {
+            custom = {
+            },
+            modifiers = {
+            }
+        },
+        jokers = {
+        },
+        consumeables = {
+        },
+        vouchers = {
+        },
+        deck = {
+            type = 'Challenge Deck'
+        },
+        restrictions = {
+            banned_cards = banned
+        }
+    })
+end
+
+
+
+---end of challenges
+INIT()
 ----------------------------------------------
 ------------MOD CODE END----------------------
     

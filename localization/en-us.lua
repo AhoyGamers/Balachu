@@ -3377,6 +3377,12 @@ return {
             tiny_hands="Thin your deck down to 20 or fewer cards",
             you_get_what_you_get="Win a run without rerolling the shop",
         },
+        challenge_names = {
+			c_csau_tucker = "Balachu Challenge",
+		},
+		v_text = {
+			ch_c_csau_tucker = {"All Non-Balachu Jokers are banned"}
+		},
         achievement_names={
             _100000k="100,000K",
             _1000k="1,000K",
