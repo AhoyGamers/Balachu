@@ -19,6 +19,7 @@ Once you've installed both lovely and Steammodded, download the [latest release]
 There are currently two bugs that may impact your gameplay experience.
 1) If you continue a run with the balachu deck, the balachu jokers wont be considered common
 2) When selecting balachu deck, all balachu jokers become common permanently
+
 Basically, you absolutely have to finish any run with the Balachu deck in one sitting.
 
 ## Credits
