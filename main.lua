@@ -71,7 +71,7 @@ SMODS.Back {
         }
     },
     unlocked = false,
-    unlock_condition = {type = 'win_deck', deck = 'b_yellow'},
+    unlock_condition = {type = 'win_stake', stake = 3},
     pos = { x = 0, y = 0 },
 	atlas = "raiDeck",
     loc_txt = {
@@ -1384,7 +1384,7 @@ SMODS.Joker{
         name = 'LeOrb',
         text = {
             'Bonus cards give',
-             '{X:blue,C:white}X2.0{} Chips',
+             '{X:blue,C:white}X1.5{} Chips',
             'when scored'
         },
     },
@@ -1413,7 +1413,7 @@ SMODS.Joker{
         if context.individual and context.cardarea == G.play then
             if SMODS.has_enhancement(context.other_card, "m_bonus") then
                 return {
-                    xchips = 2
+                    xchips = 1.5
                 }
             end
         end

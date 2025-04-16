@@ -2600,7 +2600,7 @@ return {
                 },
             },
             stake_blue={
-                name="Blue Stake",
+                name="Hulex Stake",
                 text={
                     "{C:red}-1{} Discard",
                     "{s:0.8}Applies all previous Stakes",
@@ -2639,7 +2639,7 @@ return {
                 },
             },
             stake_red={
-                name="Red Stake",
+                name="Kaito Stake",
                 text={
                     "{C:attention}Small Blind{} gives",
                     "no reward money",
