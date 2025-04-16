@@ -15,6 +15,12 @@ This mod requires [Lovely](https://github.com/ethangreen-dev/lovely-injector) an
 
 Once you've installed both lovely and Steammodded, download the [latest release](https://github.com/AhoyGamers/Balachu/releases/tag/Releases) zip file from the **Releases** tab and put the folder inside it in your Balatro Mods folder (`%APPDATA%/Balatro/Mods`). That's it! 
 
+## Bugs
+There are currently two bugs that may impact your gameplay experience.
+1) If you continue a run with the balachu deck, the balachu jokers wont be considered common
+2) When selecting balachu deck, all balachu jokers become common permanently
+Basically, you absolutely have to finish any run with the Balachu deck in one sitting.
+
 ## Credits
 Created by **The Otterly**
 
