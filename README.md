@@ -7,7 +7,7 @@ A Balatro mod made for Raichu!
 **Balaichu** is an expansion for Balatro based on twitch streamer [TheRaichu](https://www.twitch.tv/theraichuuu) made in collaboration with a few members of the Raichu Ravine community. Featuring art from several talented artists, Balaichu adds 23 new Jokers, one new deck, and a new skin for each suit.
 
 ## Automatic Installation
-Download the [Balachu installer.exe](https://github.com/AhoyGamers/Balachu/releases/tag/Releases) from the releases page and run it. Then run the game through Steam.
+Automatic installation is currently unavailable! I will be making a new installer for the latest version soon.
 
 ## Manual Installation
 
