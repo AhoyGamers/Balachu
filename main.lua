@@ -93,7 +93,6 @@ SMODS.Back {
                 for key, item in pairs(G.P_CENTERS) do
                     if item.name and string.find(item.name, "j_xmpl") then
                         item.rarity = 1
-                        --sendDebugMessage("Iterated over "..tostring(item.name), "MyDebugLogger")
                     end
                 end
                 return true
@@ -1200,8 +1199,8 @@ SMODS.Joker{
     --local variables unique to this joker
     --Recalculated when description shown
     loc_vars = function(self,info_queue,center) --center refers to the "config" variable 
-        info_queue[#info_queue + 1] = G.P_CENTERS.j_misprint
-        info_queue[#info_queue+1] = {key = "guestartist3", set = "Other"} --In the en-us lua file, checks the "other" array for the variable titled whatever the key is
+        --info_queue[#info_queue + 1] = G.P_CENTERS.j_misprint
+        --info_queue[#info_queue+1] = {key = "guestartist3", set = "Other"} --In the en-us lua file, checks the "other" array for the variable titled whatever the key is
         return {}  --returns an array of variables to the description
     end,
     --Calculate function performed during score calculatio. This is where the effects should be triggered!
