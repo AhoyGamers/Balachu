@@ -13,7 +13,7 @@ Automatic installation is currently unavailable! I will be making a new installe
 
 This mod requires [Lovely](https://github.com/ethangreen-dev/lovely-injector) and the latest version of [Steammodded](https://github.com/Steamopollys/Steamodded) Without these dependencies, this mod will not function.
 
-Once you've installed both lovely and Steammodded, download the [latest release](https://github.com/AhoyGamers/Balachu/releases/tag/Releases) zip file from the **Releases** tab and put the folder inside it in your Balatro Mods folder (`%APPDATA%/Balatro/Mods`). That's it! 
+Once you've installed both lovely and Steammodded, download the [latest release](https://github.com/AhoyGamers/Balachu/releases/tag/V0.61) zip file from the **Releases** tab and put the folder inside it in your Balatro Mods folder (`%APPDATA%/Balatro/Mods`). That's it! 
 
 ## Bugs
 There are currently two bugs that may impact your gameplay experience.
